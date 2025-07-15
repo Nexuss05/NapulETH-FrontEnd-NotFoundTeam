@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { 
   Trophy, 
   Star, 
@@ -23,16 +24,135 @@ const Index = () => {
   const [userLevel, setUserLevel] = useState(3);
   const [userXP, setUserXP] = useState(750);
   const [nextLevelXP] = useState(1000);
+  const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
+  const [isLevelDialogOpen, setIsLevelDialogOpen] = useState(false);
   
   const battlePassLevels = [
-    { level: 1, xp: 0, reward: 'Welcome Badge', type: 'badge', unlocked: true },
-    { level: 2, xp: 250, reward: '100 Tokens', type: 'tokens', unlocked: true },
-    { level: 3, xp: 500, reward: 'First Trade Badge', type: 'badge', unlocked: true },
-    { level: 4, xp: 750, reward: 'NFT Avatar', type: 'nft', unlocked: false },
-    { level: 5, xp: 1000, reward: '500 Tokens', type: 'tokens', unlocked: false },
-    { level: 6, xp: 1500, reward: 'DeFi Master Badge', type: 'badge', unlocked: false },
-    { level: 7, xp: 2000, reward: 'Premium Features', type: 'feature', unlocked: false },
-    { level: 8, xp: 2500, reward: '1000 Tokens', type: 'tokens', unlocked: false },
+    { 
+      level: 1, 
+      xp: 0, 
+      reward: 'Welcome Badge', 
+      type: 'badge', 
+      unlocked: true,
+      title: 'Benvenuto in CryptoQuest',
+      description: 'Inizia il tuo viaggio nel mondo delle criptovalute',
+      requirements: [
+        'Registrati sulla piattaforma',
+        'Completa il tutorial iniziale',
+        'Leggi la guida di sicurezza base'
+      ],
+      tips: 'Questo è il tuo primo passo! Prenderai confidenza con l\'interfaccia e i concetti base.'
+    },
+    { 
+      level: 2, 
+      xp: 250, 
+      reward: '100 Tokens', 
+      type: 'tokens', 
+      unlocked: true,
+      title: 'Primi Passi',
+      description: 'Impara le basi della blockchain',
+      requirements: [
+        'Completa 2 task di base',
+        'Leggi la sezione "Cos\'è la blockchain"',
+        'Guarda il video introduttivo'
+      ],
+      tips: 'Concentrati sulla comprensione dei concetti fondamentali prima di procedere.'
+    },
+    { 
+      level: 3, 
+      xp: 500, 
+      reward: 'First Trade Badge', 
+      type: 'badge', 
+      unlocked: true,
+      title: 'Primo Scambio',
+      description: 'Effettua la tua prima transazione',
+      requirements: [
+        'Connetti il tuo wallet',
+        'Completa una transazione di prova',
+        'Verifica la transazione su blockchain explorer'
+      ],
+      tips: 'Usa sempre piccole quantità per le prime transazioni per imparare senza rischi.'
+    },
+    { 
+      level: 4, 
+      xp: 750, 
+      reward: 'NFT Avatar', 
+      type: 'nft', 
+      unlocked: false,
+      title: 'Collezionista Digitale',
+      description: 'Esplora il mondo degli NFT',
+      requirements: [
+        'Completa 5 task totali',
+        'Studia la sezione NFT',
+        'Visita un marketplace NFT',
+        'Comprendi i diritti di proprietà digitale'
+      ],
+      tips: 'Gli NFT sono più di semplici immagini - rappresentano proprietà digitale verificabile.'
+    },
+    { 
+      level: 5, 
+      xp: 1000, 
+      reward: '500 Tokens', 
+      type: 'tokens', 
+      unlocked: false,
+      title: 'Trader Intermedio',
+      description: 'Padroneggia il trading di base',
+      requirements: [
+        'Completa il corso di trading',
+        'Esegui 3 operazioni di trading',
+        'Impara a leggere i grafici di base',
+        'Studia la gestione del rischio'
+      ],
+      tips: 'Il trading richiede disciplina e gestione del rischio. Mai investire più di quanto puoi permetterti di perdere.'
+    },
+    { 
+      level: 6, 
+      xp: 1500, 
+      reward: 'DeFi Master Badge', 
+      type: 'badge', 
+      unlocked: false,
+      title: 'Esperto DeFi',
+      description: 'Diventa un maestro della finanza decentralizzata',
+      requirements: [
+        'Completa tutti i task DeFi',
+        'Usa almeno 3 protocolli DeFi',
+        'Comprendi lending e borrowing',
+        'Studia yield farming e liquidity mining'
+      ],
+      tips: 'La DeFi offre opportunità uniche ma richiede comprensione approfondita dei rischi.'
+    },
+    { 
+      level: 7, 
+      xp: 2000, 
+      reward: 'Premium Features', 
+      type: 'feature', 
+      unlocked: false,
+      title: 'Utente Premium',
+      description: 'Sblocca funzionalità avanzate',
+      requirements: [
+        'Raggiungi 2000 XP',
+        'Completa 10 task diversi',
+        'Partecipa alla community',
+        'Scrivi una recensione'
+      ],
+      tips: 'Le funzionalità premium includono analisi avanzate, alerts personalizzati e supporto prioritario.'
+    },
+    { 
+      level: 8, 
+      xp: 2500, 
+      reward: '1000 Tokens', 
+      type: 'tokens', 
+      unlocked: false,
+      title: 'Crypto Master',
+      description: 'Sei diventato un vero esperto',
+      requirements: [
+        'Completa tutti i corsi disponibili',
+        'Aiuta 5 nuovi utenti',
+        'Partecipa a governance voting',
+        'Crea contenuto educativo'
+      ],
+      tips: 'A questo livello, puoi contribuire attivamente alla community e aiutare altri utenti.'
+    },
   ];
 
   const tasks = [
@@ -94,9 +214,17 @@ const Index = () => {
   const totalTasks = tasks.length;
 
   const handleTaskComplete = (taskId: number) => {
-    // Logica per completare un task
     console.log(`Task ${taskId} completed`);
   };
+
+  const handleLevelClick = (level: typeof battlePassLevels[0]) => {
+    setSelectedLevel(level.level);
+    setIsLevelDialogOpen(true);
+  };
+
+  const selectedLevelData = selectedLevel 
+    ? battlePassLevels.find(l => l.level === selectedLevel)
+    : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -164,7 +292,8 @@ const Index = () => {
               {battlePassLevels.map((level) => (
                 <Card
                   key={level.level}
-                  className={`relative overflow-hidden transition-all duration-300 hover:scale-105 ${
+                  onClick={() => handleLevelClick(level)}
+                  className={`relative overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer ${
                     level.unlocked
                       ? 'bg-gradient-to-br from-primary/20 to-secondary/20 border-primary/50'
                       : userXP >= level.xp
@@ -368,6 +497,101 @@ const Index = () => {
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Level Details Dialog */}
+      <Dialog open={isLevelDialogOpen} onOpenChange={setIsLevelDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          {selectedLevelData && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
+                    <span className="text-primary-foreground font-bold">
+                      {selectedLevelData.level}
+                    </span>
+                  </div>
+                  {selectedLevelData.title}
+                </DialogTitle>
+                <DialogDescription>
+                  {selectedLevelData.description}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-6">
+                {/* Status */}
+                <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    {selectedLevelData.unlocked ? (
+                      <CheckCircle className="w-5 h-5 text-green-400" />
+                    ) : userXP >= selectedLevelData.xp ? (
+                      <Gift className="w-5 h-5 text-accent" />
+                    ) : (
+                      <Lock className="w-5 h-5 text-muted-foreground" />
+                    )}
+                    <span className="font-semibold">
+                      {selectedLevelData.unlocked 
+                        ? 'Completato' 
+                        : userXP >= selectedLevelData.xp 
+                        ? 'Pronto per sbloccare' 
+                        : 'Bloccato'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs">
+                      {selectedLevelData.xp} XP richiesti
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      {selectedLevelData.reward}
+                    </Badge>
+                  </div>
+                </div>
+
+                {/* Requirements */}
+                <div>
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <Target className="w-4 h-4" />
+                    Requisiti per sbloccare:
+                  </h4>
+                  <ul className="space-y-2">
+                    {selectedLevelData.requirements.map((req, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                        <span className="text-sm">{req}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Tips */}
+                <div className="bg-gradient-to-r from-accent/10 to-accent/20 p-4 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold mb-2 flex items-center gap-2 text-accent">
+                    <Zap className="w-4 h-4" />
+                    Suggerimento:
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedLevelData.tips}
+                  </p>
+                </div>
+
+                {/* Action Button */}
+                <div className="flex justify-end gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsLevelDialogOpen(false)}
+                  >
+                    Chiudi
+                  </Button>
+                  {!selectedLevelData.unlocked && userXP >= selectedLevelData.xp && (
+                    <Button className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+                      Sblocca Livello
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
