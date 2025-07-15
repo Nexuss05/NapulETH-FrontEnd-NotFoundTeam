@@ -1,597 +1,483 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { WalletConnect } from '@/components/WalletConnect';
+import { TransactionHistory } from '@/components/TransactionHistory';
+import { TransactionForm } from '@/components/TransactionForm';
 import { 
   Trophy, 
   Star, 
-  CheckCircle, 
   Lock, 
+  CheckCircle, 
   Zap, 
-  Coins, 
+  Award,
   Target,
   BookOpen,
-  Users,
   Shield,
+  Coins,
   TrendingUp,
-  Gift
+  Users,
+  Gift,
+  Wallet,
+  LogOut,
+  History,
+  Send
 } from 'lucide-react';
 
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  xp: number;
+  completed: boolean;
+  category: 'basics' | 'trading' | 'defi' | 'security';
+}
+
+interface Level {
+  level: number;
+  title: string;
+  xpRequired: number;
+  rewards: string[];
+  unlocked: boolean;
+  description: string;
+  requirements: string[];
+  tips: string[];
+}
+
+const tasks: Task[] = [
+  {
+    id: '1',
+    title: 'Connect Your Wallet',
+    description: 'Connect your MetaMask wallet to the platform',
+    xp: 100,
+    completed: false,
+    category: 'basics'
+  },
+  {
+    id: '2',
+    title: 'Complete Profile',
+    description: 'Add your basic information',
+    xp: 50,
+    completed: false,
+    category: 'basics'
+  },
+  {
+    id: '3',
+    title: 'First Transaction',
+    description: 'Execute your first blockchain transaction',
+    xp: 200,
+    completed: false,
+    category: 'trading'
+  },
+  {
+    id: '4',
+    title: 'Learn DeFi Basics',
+    description: 'Complete the DeFi tutorial',
+    xp: 150,
+    completed: false,
+    category: 'defi'
+  },
+  {
+    id: '5',
+    title: 'Setup 2FA',
+    description: 'Enable two-factor authentication',
+    xp: 75,
+    completed: false,
+    category: 'security'
+  }
+];
+
+const levels: Level[] = [
+  {
+    level: 1,
+    title: 'Crypto Newbie',
+    xpRequired: 0,
+    rewards: ['Welcome Badge', 'Basic Tutorial Access'],
+    unlocked: true,
+    description: 'Welcome to the crypto world! Start your journey by learning the basics.',
+    requirements: ['Complete registration', 'Connect wallet'],
+    tips: ['Take your time to read everything', 'Don\'t rush', 'Ask questions in the community']
+  },
+  {
+    level: 2,
+    title: 'Wallet Explorer',
+    xpRequired: 150,
+    rewards: ['Wallet Badge', 'Transaction Tutorial'],
+    unlocked: false,
+    description: 'Learn to manage your wallet and make your first transactions safely.',
+    requirements: ['Connect wallet', 'Complete profile', 'Study security basics'],
+    tips: ['Always save your seed phrase', 'Always check recipient address', 'Start with small amounts']
+  },
+  {
+    level: 3,
+    title: 'Trader Apprentice',
+    xpRequired: 350,
+    rewards: ['Trading Badge', 'Market Analysis Tools'],
+    unlocked: false,
+    description: 'Discover crypto markets and learn trading basics.',
+    requirements: ['Execute first transaction', 'Study basic charts', 'Understand order types'],
+    tips: ['DYOR (Do Your Own Research)', 'Don\'t invest more than you can afford to lose', 'Use stop losses']
+  },
+  {
+    level: 4,
+    title: 'DeFi Student',
+    xpRequired: 500,
+    rewards: ['DeFi Badge', 'Yield Farming Access'],
+    unlocked: false,
+    description: 'Explore the world of decentralized finance.',
+    requirements: ['Complete DeFi tutorial', 'Try a DEX', 'Understand liquidity pools'],
+    tips: ['Watch out for gas fees', 'Understand impermanent loss risks', 'Start with trusted protocols']
+  },
+  {
+    level: 5,
+    title: 'Security Expert',
+    xpRequired: 650,
+    rewards: ['Security Badge', 'Advanced Features'],
+    unlocked: false,
+    description: 'Become a blockchain security expert.',
+    requirements: ['Enable 2FA', 'Study best practices', 'Complete security quiz'],
+    tips: ['Never share private keys', 'Use hardware wallet for large amounts', 'Always verify smart contracts']
+  }
+];
+
 const Index = () => {
-  const [userLevel, setUserLevel] = useState(3);
-  const [userXP, setUserXP] = useState(750);
-  const [nextLevelXP] = useState(1000);
-  const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
-  const [isLevelDialogOpen, setIsLevelDialogOpen] = useState(false);
-  
-  const battlePassLevels = [
-    { 
-      level: 1, 
-      xp: 0, 
-      reward: 'Welcome Badge', 
-      type: 'badge', 
-      unlocked: true,
-      title: 'Benvenuto in CryptoQuest',
-      description: 'Inizia il tuo viaggio nel mondo delle criptovalute',
-      requirements: [
-        'Registrati sulla piattaforma',
-        'Completa il tutorial iniziale',
-        'Leggi la guida di sicurezza base'
-      ],
-      tips: 'Questo è il tuo primo passo! Prenderai confidenza con l\'interfaccia e i concetti base.'
-    },
-    { 
-      level: 2, 
-      xp: 250, 
-      reward: '100 Tokens', 
-      type: 'tokens', 
-      unlocked: true,
-      title: 'Primi Passi',
-      description: 'Impara le basi della blockchain',
-      requirements: [
-        'Completa 2 task di base',
-        'Leggi la sezione "Cos\'è la blockchain"',
-        'Guarda il video introduttivo'
-      ],
-      tips: 'Concentrati sulla comprensione dei concetti fondamentali prima di procedere.'
-    },
-    { 
-      level: 3, 
-      xp: 500, 
-      reward: 'First Trade Badge', 
-      type: 'badge', 
-      unlocked: true,
-      title: 'Primo Scambio',
-      description: 'Effettua la tua prima transazione',
-      requirements: [
-        'Connetti il tuo wallet',
-        'Completa una transazione di prova',
-        'Verifica la transazione su blockchain explorer'
-      ],
-      tips: 'Usa sempre piccole quantità per le prime transazioni per imparare senza rischi.'
-    },
-    { 
-      level: 4, 
-      xp: 750, 
-      reward: 'NFT Avatar', 
-      type: 'nft', 
-      unlocked: false,
-      title: 'Collezionista Digitale',
-      description: 'Esplora il mondo degli NFT',
-      requirements: [
-        'Completa 5 task totali',
-        'Studia la sezione NFT',
-        'Visita un marketplace NFT',
-        'Comprendi i diritti di proprietà digitale'
-      ],
-      tips: 'Gli NFT sono più di semplici immagini - rappresentano proprietà digitale verificabile.'
-    },
-    { 
-      level: 5, 
-      xp: 1000, 
-      reward: '500 Tokens', 
-      type: 'tokens', 
-      unlocked: false,
-      title: 'Trader Intermedio',
-      description: 'Padroneggia il trading di base',
-      requirements: [
-        'Completa il corso di trading',
-        'Esegui 3 operazioni di trading',
-        'Impara a leggere i grafici di base',
-        'Studia la gestione del rischio'
-      ],
-      tips: 'Il trading richiede disciplina e gestione del rischio. Mai investire più di quanto puoi permetterti di perdere.'
-    },
-    { 
-      level: 6, 
-      xp: 1500, 
-      reward: 'DeFi Master Badge', 
-      type: 'badge', 
-      unlocked: false,
-      title: 'Esperto DeFi',
-      description: 'Diventa un maestro della finanza decentralizzata',
-      requirements: [
-        'Completa tutti i task DeFi',
-        'Usa almeno 3 protocolli DeFi',
-        'Comprendi lending e borrowing',
-        'Studia yield farming e liquidity mining'
-      ],
-      tips: 'La DeFi offre opportunità uniche ma richiede comprensione approfondita dei rischi.'
-    },
-    { 
-      level: 7, 
-      xp: 2000, 
-      reward: 'Premium Features', 
-      type: 'feature', 
-      unlocked: false,
-      title: 'Utente Premium',
-      description: 'Sblocca funzionalità avanzate',
-      requirements: [
-        'Raggiungi 2000 XP',
-        'Completa 10 task diversi',
-        'Partecipa alla community',
-        'Scrivi una recensione'
-      ],
-      tips: 'Le funzionalità premium includono analisi avanzate, alerts personalizzati e supporto prioritario.'
-    },
-    { 
-      level: 8, 
-      xp: 2500, 
-      reward: '1000 Tokens', 
-      type: 'tokens', 
-      unlocked: false,
-      title: 'Crypto Master',
-      description: 'Sei diventato un vero esperto',
-      requirements: [
-        'Completa tutti i corsi disponibili',
-        'Aiuta 5 nuovi utenti',
-        'Partecipa a governance voting',
-        'Crea contenuto educativo'
-      ],
-      tips: 'A questo livello, puoi contribuire attivamente alla community e aiutare altri utenti.'
-    },
-  ];
+  const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
+  const [currentXP, setCurrentXP] = useState(75);
+  const [currentLevel, setCurrentLevel] = useState(1);
+  const [isConnected, setIsConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState('');
 
-  const tasks = [
-    {
-      id: 1,
-      title: 'Connect Your Wallet',
-      description: 'Learn to connect MetaMask or other wallets',
-      xp: 100,
-      completed: true,
-      category: 'basics',
-      icon: Shield
-    },
-    {
-      id: 2,
-      title: 'Make Your First Transaction',
-      description: 'Send a small amount to another wallet',
-      xp: 150,
-      completed: true,
-      category: 'basics',
-      icon: Zap
-    },
-    {
-      id: 3,
-      title: 'Explore DeFi Protocols',
-      description: 'Learn about decentralized finance',
-      xp: 200,
-      completed: false,
-      category: 'defi',
-      icon: TrendingUp
-    },
-    {
-      id: 4,
-      title: 'Join Trading Community',
-      description: 'Connect with other traders',
-      xp: 100,
-      completed: false,
-      category: 'social',
-      icon: Users
-    },
-    {
-      id: 5,
-      title: 'Complete Trading Course',
-      description: 'Master the basics of crypto trading',
-      xp: 300,
-      completed: false,
-      category: 'education',
-      icon: BookOpen
-    }
-  ];
-
-  const achievements = [
-    { name: 'First Steps', description: 'Completed your first task', unlocked: true },
-    { name: 'Wallet Master', description: 'Connected 3 different wallets', unlocked: true },
-    { name: 'Trading Pro', description: 'Completed 10 trades', unlocked: false },
-    { name: 'DeFi Explorer', description: 'Used 5 different protocols', unlocked: false },
-  ];
+  const currentLevelData = levels.find(l => l.level === currentLevel);
+  const nextLevelData = levels.find(l => l.level === currentLevel + 1);
+  const progressToNextLevel = nextLevelData ? 
+    ((currentXP - (currentLevelData?.xpRequired || 0)) / (nextLevelData.xpRequired - (currentLevelData?.xpRequired || 0))) * 100 : 100;
 
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
 
-  const handleTaskComplete = (taskId: number) => {
-    console.log(`Task ${taskId} completed`);
+  const handleWalletConnect = (address: string) => {
+    setWalletAddress(address);
+    setIsConnected(true);
   };
 
-  const handleLevelClick = (level: typeof battlePassLevels[0]) => {
-    setSelectedLevel(level.level);
-    setIsLevelDialogOpen(true);
+  const handleDisconnect = () => {
+    setIsConnected(false);
+    setWalletAddress('');
   };
 
-  const selectedLevelData = selectedLevel 
-    ? battlePassLevels.find(l => l.level === selectedLevel)
-    : null;
+  if (!isConnected) {
+    return <WalletConnect onConnect={handleWalletConnect} />;
+  }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-cyber-dark">
       {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur">
+      <header className="border-b border-cyber-blue/20 bg-card/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
-                <Zap className="w-5 h-5 text-primary-foreground" />
+              <div className="w-10 h-10 bg-gradient-to-br from-cyber-blue to-cyber-purple rounded-full flex items-center justify-center">
+                <Zap className="w-5 h-5 text-white" />
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                CryptoQuest
-              </h1>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-cyber-blue to-cyber-purple bg-clip-text text-transparent">
+                  CryptoQuest
+                </h1>
+                <p className="text-sm text-muted-foreground">Your crypto adventure starts here</p>
+              </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-sm">
-                <Star className="w-4 h-4 text-yellow-400" />
-                <span className="text-foreground">{userXP} XP</span>
+              <div className="text-right">
+                <p className="text-sm text-muted-foreground">Total XP</p>
+                <p className="text-lg font-bold text-cyber-blue">{currentXP}</p>
               </div>
-              <Badge variant="outline" className="text-primary border-primary">
-                Level {userLevel}
-              </Badge>
+              <div className="text-right">
+                <p className="text-sm text-muted-foreground">Level</p>
+                <p className="text-lg font-bold text-cyber-purple">{currentLevel}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="text-right">
+                  <p className="text-sm text-muted-foreground">Wallet</p>
+                  <p className="text-sm font-mono text-cyber-blue">{walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</p>
+                </div>
+                <Button variant="outline" size="sm" onClick={handleDisconnect}>
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="battlepass" className="w-full">
-          <TabsList className="grid grid-cols-4 w-full max-w-md mx-auto mb-8">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="battlepass">Battle Pass</TabsTrigger>
-            <TabsTrigger value="tasks">Tasks</TabsTrigger>
-            <TabsTrigger value="achievements">Achievements</TabsTrigger>
-            <TabsTrigger value="learn">Learn</TabsTrigger>
+            <TabsTrigger value="transactions">
+              <History className="w-4 h-4 mr-2" />
+              Transactions
+            </TabsTrigger>
+            <TabsTrigger value="send">
+              <Send className="w-4 h-4 mr-2" />
+              Send
+            </TabsTrigger>
+            <TabsTrigger value="learn">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Learn
+            </TabsTrigger>
           </TabsList>
 
-          {/* Battle Pass Section */}
-          <TabsContent value="battlepass" className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-2">Crypto Battle Pass</h2>
-              <p className="text-muted-foreground">
-                Complete tasks to unlock rewards and level up your crypto journey
-              </p>
-            </div>
+          <TabsContent value="battlepass">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Battle Pass */}
+              <div className="lg:col-span-2">
+                <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
+                  <CardHeader>
+                    <CardTitle className="text-xl font-bold text-cyber-blue flex items-center gap-2">
+                      <Trophy className="w-5 h-5" />
+                      Battle Pass - Season 1
+                    </CardTitle>
+                    <div className="flex items-center gap-4">
+                      <div className="flex-1">
+                        <div className="flex justify-between text-sm mb-2">
+                          <span>Level Progress</span>
+                          <span>{Math.round(progressToNextLevel)}%</span>
+                        </div>
+                        <Progress value={progressToNextLevel} className="h-2" />
+                      </div>
+                      <Badge variant="outline" className="border-cyber-purple text-cyber-purple">
+                        {currentXP} / {nextLevelData?.xpRequired || 'MAX'} XP
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {levels.map((level, index) => (
+                        <Dialog key={level.level}>
+                          <DialogTrigger asChild>
+                            <div 
+                              className={`relative p-4 rounded-lg border transition-all cursor-pointer hover:scale-105 ${
+                                level.unlocked 
+                                  ? 'bg-gradient-to-r from-cyber-blue/10 to-cyber-purple/10 border-cyber-blue/30' 
+                                  : 'bg-gray-500/10 border-gray-500/20'
+                              }`}
+                              onClick={() => setSelectedLevel(level)}
+                            >
+                              <div className="flex items-center gap-4">
+                                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                                  level.unlocked ? 'bg-gradient-to-br from-cyber-blue to-cyber-purple' : 'bg-gray-500'
+                                }`}>
+                                  {level.unlocked ? (
+                                    <Star className="w-6 h-6 text-white" />
+                                  ) : (
+                                    <Lock className="w-6 h-6 text-gray-300" />
+                                  )}
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <h3 className="font-bold text-lg">{level.title}</h3>
+                                    <Badge variant="outline" className="text-xs">
+                                      Level {level.level}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground mb-2">
+                                    {level.xpRequired} XP required
+                                  </p>
+                                  <div className="flex gap-2">
+                                    {level.rewards.map((reward, idx) => (
+                                      <Badge key={idx} variant="secondary" className="text-xs">
+                                        {reward}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                </div>
+                                {currentLevel >= level.level && (
+                                  <CheckCircle className="w-6 h-6 text-green-400" />
+                                )}
+                              </div>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-md">
+                            <DialogHeader>
+                              <DialogTitle className="flex items-center gap-2">
+                                <Star className="w-5 h-5 text-cyber-blue" />
+                                {level.title}
+                              </DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                              <div>
+                                <h4 className="font-semibold mb-2">Description</h4>
+                                <p className="text-sm text-muted-foreground">{level.description}</p>
+                              </div>
+                              
+                              <div>
+                                <h4 className="font-semibold mb-2">Requirements</h4>
+                                <ul className="text-sm text-muted-foreground space-y-1">
+                                  {level.requirements.map((req, idx) => (
+                                    <li key={idx} className="flex items-center gap-2">
+                                      <Target className="w-3 h-3" />
+                                      {req}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
 
-            {/* Progress Bar */}
-            <Card className="bg-gradient-to-r from-card to-card/50 border-border">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <Trophy className="w-5 h-5 text-primary" />
-                    <span className="font-semibold">Level {userLevel}</span>
+                              <div>
+                                <h4 className="font-semibold mb-2">Tips</h4>
+                                <ul className="text-sm text-muted-foreground space-y-1">
+                                  {level.tips.map((tip, idx) => (
+                                    <li key={idx} className="flex items-center gap-2">
+                                      <BookOpen className="w-3 h-3" />
+                                      {tip}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+
+                              <div>
+                                <h4 className="font-semibold mb-2">Rewards</h4>
+                                <div className="flex flex-wrap gap-2">
+                                  {level.rewards.map((reward, idx) => (
+                                    <Badge key={idx} variant="secondary" className="text-xs">
+                                      <Gift className="w-3 h-3 mr-1" />
+                                      {reward}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Sidebar */}
+              <div className="space-y-6">
+                {/* Current Level */}
+                <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
+                  <CardHeader>
+                    <CardTitle className="text-lg font-bold text-cyber-purple flex items-center gap-2">
+                      <Award className="w-5 h-5" />
+                      Current Level
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-cyber-blue to-cyber-purple rounded-full flex items-center justify-center">
+                        <span className="text-2xl font-bold text-white">{currentLevel}</span>
+                      </div>
+                      <h3 className="font-bold text-lg mb-2">{currentLevelData?.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        {currentXP} / {nextLevelData?.xpRequired || 'MAX'} XP
+                      </p>
+                      <Progress value={progressToNextLevel} className="h-2" />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Quick Stats */}
+                <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
+                  <CardHeader>
+                    <CardTitle className="text-lg font-bold text-cyber-blue flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5" />
+                      Statistics
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Tasks Completed</span>
+                        <span className="font-bold text-cyber-blue">{completedTasks}/{totalTasks}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">XP Earned</span>
+                        <span className="font-bold text-cyber-purple">{currentXP}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Level</span>
+                        <span className="font-bold text-cyber-neon">{currentLevel}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Daily Tasks */}
+                <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
+                  <CardHeader>
+                    <CardTitle className="text-lg font-bold text-cyber-blue flex items-center gap-2">
+                      <Target className="w-5 h-5" />
+                      Daily Tasks
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {tasks.slice(0, 3).map((task) => (
+                        <div key={task.id} className="flex items-center gap-3 p-3 rounded-lg bg-cyber-dark/30">
+                          <div className={`w-2 h-2 rounded-full ${
+                            task.completed ? 'bg-green-400' : 'bg-yellow-400'
+                          }`} />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">{task.title}</p>
+                            <p className="text-xs text-muted-foreground">+{task.xp} XP</p>
+                          </div>
+                          {task.completed && <CheckCircle className="w-4 h-4 text-green-400" />}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="transactions">
+            <TransactionHistory />
+          </TabsContent>
+
+          <TabsContent value="send">
+            <TransactionForm />
+          </TabsContent>
+
+          <TabsContent value="learn">
+            <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-cyber-blue">Learn Center</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
+                    <h3 className="font-bold mb-2 text-cyber-blue">Blockchain Basics</h3>
+                    <p className="text-sm text-muted-foreground mb-3">Learn the fundamentals of blockchain technology</p>
+                    <Button variant="outline" size="sm">Start Learning</Button>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    {userXP} / {nextLevelXP} XP
+                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
+                    <h3 className="font-bold mb-2 text-cyber-purple">DeFi Guide</h3>
+                    <p className="text-sm text-muted-foreground mb-3">Explore decentralized finance protocols</p>
+                    <Button variant="outline" size="sm">Start Learning</Button>
+                  </div>
+                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
+                    <h3 className="font-bold mb-2 text-cyber-neon">Security Best Practices</h3>
+                    <p className="text-sm text-muted-foreground mb-3">Keep your crypto assets safe</p>
+                    <Button variant="outline" size="sm">Start Learning</Button>
+                  </div>
+                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
+                    <h3 className="font-bold mb-2 text-cyber-blue">Trading Strategies</h3>
+                    <p className="text-sm text-muted-foreground mb-3">Learn how to trade cryptocurrencies</p>
+                    <Button variant="outline" size="sm">Start Learning</Button>
                   </div>
                 </div>
-                <Progress value={(userXP / nextLevelXP) * 100} className="h-3" />
               </CardContent>
             </Card>
-
-            {/* Battle Pass Levels */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {battlePassLevels.map((level) => (
-                <Card
-                  key={level.level}
-                  onClick={() => handleLevelClick(level)}
-                  className={`relative overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer ${
-                    level.unlocked
-                      ? 'bg-gradient-to-br from-primary/20 to-secondary/20 border-primary/50'
-                      : userXP >= level.xp
-                      ? 'bg-gradient-to-br from-accent/20 to-accent/30 border-accent/50'
-                      : 'bg-muted/50 border-muted'
-                  }`}
-                >
-                  <CardContent className="p-4 text-center">
-                    <div className="flex items-center justify-center mb-2">
-                      {level.unlocked ? (
-                        <CheckCircle className="w-8 h-8 text-green-400" />
-                      ) : userXP >= level.xp ? (
-                        <Gift className="w-8 h-8 text-accent" />
-                      ) : (
-                        <Lock className="w-8 h-8 text-muted-foreground" />
-                      )}
-                    </div>
-                    <h3 className="font-semibold mb-1">Level {level.level}</h3>
-                    <p className="text-sm text-muted-foreground mb-2">{level.xp} XP</p>
-                    <Badge
-                      variant={level.unlocked ? 'default' : 'secondary'}
-                      className="text-xs"
-                    >
-                      {level.reward}
-                    </Badge>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Tasks Section */}
-          <TabsContent value="tasks" className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-2">Learning Tasks</h2>
-              <p className="text-muted-foreground">
-                Complete these tasks to earn XP and unlock new levels
-              </p>
-            </div>
-
-            <div className="grid gap-4">
-              {tasks.map((task) => {
-                const IconComponent = task.icon;
-                return (
-                  <Card
-                    key={task.id}
-                    className={`transition-all duration-300 hover:shadow-lg ${
-                      task.completed
-                        ? 'bg-gradient-to-r from-green-500/10 to-green-600/10 border-green-500/50'
-                        : 'hover:border-primary/50'
-                    }`}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-4">
-                          <div
-                            className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                              task.completed
-                                ? 'bg-green-500/20 text-green-400'
-                                : 'bg-primary/20 text-primary'
-                            }`}
-                          >
-                            <IconComponent className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-lg mb-1">
-                              {task.title}
-                            </h3>
-                            <p className="text-muted-foreground mb-2">
-                              {task.description}
-                            </p>
-                            <div className="flex items-center gap-2">
-                              <Badge variant="outline" className="text-xs">
-                                {task.category}
-                              </Badge>
-                              <Badge variant="secondary" className="text-xs">
-                                +{task.xp} XP
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {task.completed ? (
-                            <CheckCircle className="w-6 h-6 text-green-400" />
-                          ) : (
-                            <Button
-                              onClick={() => handleTaskComplete(task.id)}
-                              size="sm"
-                              className="bg-gradient-to-r from-primary to-secondary hover:opacity-90"
-                            >
-                              Start
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </TabsContent>
-
-          {/* Achievements Section */}
-          <TabsContent value="achievements" className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-2">Achievements</h2>
-              <p className="text-muted-foreground">
-                Unlock badges as you progress through your crypto journey
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {achievements.map((achievement, index) => (
-                <Card
-                  key={index}
-                  className={`text-center transition-all duration-300 hover:scale-105 ${
-                    achievement.unlocked
-                      ? 'bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-yellow-500/50'
-                      : 'bg-muted/50 border-muted'
-                  }`}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-center mb-4">
-                      {achievement.unlocked ? (
-                        <Trophy className="w-12 h-12 text-yellow-400" />
-                      ) : (
-                        <Lock className="w-12 h-12 text-muted-foreground" />
-                      )}
-                    </div>
-                    <h3 className="font-semibold mb-2">{achievement.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {achievement.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Learn Section */}
-          <TabsContent value="learn" className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-2">Learn Crypto</h2>
-              <p className="text-muted-foreground">
-                Educational resources to master blockchain and cryptocurrency
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-primary" />
-                    Wallet Basics
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Learn how to safely store and manage your cryptocurrencies
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    Start Learning
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-primary" />
-                    DeFi Fundamentals
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Discover decentralized finance and yield farming strategies
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    Start Learning
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="w-5 h-5 text-primary" />
-                    Trading Strategies
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Master technical analysis and risk management techniques
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    Start Learning
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
           </TabsContent>
         </Tabs>
-      </main>
-
-      {/* Level Details Dialog */}
-      <Dialog open={isLevelDialogOpen} onOpenChange={setIsLevelDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          {selectedLevelData && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
-                    <span className="text-primary-foreground font-bold">
-                      {selectedLevelData.level}
-                    </span>
-                  </div>
-                  {selectedLevelData.title}
-                </DialogTitle>
-                <DialogDescription>
-                  {selectedLevelData.description}
-                </DialogDescription>
-              </DialogHeader>
-
-              <div className="space-y-6">
-                {/* Status */}
-                <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    {selectedLevelData.unlocked ? (
-                      <CheckCircle className="w-5 h-5 text-green-400" />
-                    ) : userXP >= selectedLevelData.xp ? (
-                      <Gift className="w-5 h-5 text-accent" />
-                    ) : (
-                      <Lock className="w-5 h-5 text-muted-foreground" />
-                    )}
-                    <span className="font-semibold">
-                      {selectedLevelData.unlocked 
-                        ? 'Completato' 
-                        : userXP >= selectedLevelData.xp 
-                        ? 'Pronto per sbloccare' 
-                        : 'Bloccato'}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">
-                      {selectedLevelData.xp} XP richiesti
-                    </Badge>
-                    <Badge variant="secondary" className="text-xs">
-                      {selectedLevelData.reward}
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Requirements */}
-                <div>
-                  <h4 className="font-semibold mb-3 flex items-center gap-2">
-                    <Target className="w-4 h-4" />
-                    Requisiti per sbloccare:
-                  </h4>
-                  <ul className="space-y-2">
-                    {selectedLevelData.requirements.map((req, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                        <span className="text-sm">{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Tips */}
-                <div className="bg-gradient-to-r from-accent/10 to-accent/20 p-4 rounded-lg border border-accent/20">
-                  <h4 className="font-semibold mb-2 flex items-center gap-2 text-accent">
-                    <Zap className="w-4 h-4" />
-                    Suggerimento:
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedLevelData.tips}
-                  </p>
-                </div>
-
-                {/* Action Button */}
-                <div className="flex justify-end gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsLevelDialogOpen(false)}
-                  >
-                    Chiudi
-                  </Button>
-                  {!selectedLevelData.unlocked && userXP >= selectedLevelData.xp && (
-                    <Button className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
-                      Sblocca Livello
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+      </div>
     </div>
   );
 };
