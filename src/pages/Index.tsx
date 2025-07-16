@@ -61,13 +61,23 @@ const seasons: Season[] = [
         completed: false,
         reward: 'Wallet Badge'
       },
-      {
-        id: '2',
-        title: 'Explore the Platform',
-        description: 'Familiarize yourself with the different sections of the platform.',
-        xp: 50,
-        completed: false,
-        reward: 'Platform Badge'
+      // {
+      //   id: '2',
+      //   title: 'Explore the Platform',
+      //   description: 'Familiarize yourself with the different sections of the platform.',
+      //   xp: 50,
+      //   completed: false,
+      //   reward: 'Platform Badge'
+      // },
+
+      { 
+        id: '2', 
+        title: 'Complete the "How Do You Secure Your Cryptocurrencies?" Module', 
+        description: 'Understand best practices for cryptocurrency security.', 
+        xp: 200, 
+        completed: false, 
+        reward: 'Secure Cryptocurrencies Badge',
+        learnTopicId: 'securing-cryptocurrencies',
       },
       {
         id: '3',
@@ -614,7 +624,7 @@ const Index = () => {
                         </div>
                         <Progress value={progressToNextSeason} className="h-2" />
                       </div>
-                      <Badge variant="outline" className="border-cyber-purple text-cyber-purple">
+                      <Badge variant="outline" className="border-cyber-red text-cyber-purple">
                         {completedTasks} / {totalTasks} Task
                       </Badge>
                     </div>
@@ -648,7 +658,7 @@ const Index = () => {
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <h3 className="font-bold text-lg">{task.title}</h3>
-                                    <Badge variant="outline" className="text-xs">
+                                    <Badge variant="outline" style={{ color: '#9933FF' }} className="text-xs">
                                       +{task.xp} XP
                                     </Badge>
                                   </div>
@@ -703,7 +713,7 @@ const Index = () => {
                   <CardHeader>
                     <CardTitle className="text-lg font-bold text-cyber-purple flex items-center gap-2">
                       <Award className="w-5 h-5" />
-                      Season Corrente
+                      Current Season
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
