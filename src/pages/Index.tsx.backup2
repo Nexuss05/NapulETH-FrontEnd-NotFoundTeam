@@ -2,7 +2,6 @@ import { RealWalletConnect } from "@/components/RealWalletConnect";
 import { RealTransactionHistory } from "@/components/RealTransactionHistory";
 import { RealTransactionForm } from "@/components/RealTransactionForm";
 import { useState } from 'react';
-import { useDisconnect } from 'wagmi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -28,9 +27,7 @@ import {
   History,
   Send,
   Activity,
-  ExternalLink,
-  Power,
-  AlertCircle
+  ExternalLink
 } from 'lucide-react';
 import WalletIcon from '@/assets/icons/wallet.svg';
 import SecurityIcon from '@/assets/icons/security.svg';
@@ -256,10 +253,6 @@ const seasons: Season[] = [
         completed: false, 
         reward: 'NFT Badge' 
       },
-	  
-	  
-	  
-	  
       { 
         id: '21', 
         title: 'Complete an Advanced Simulated Trading Challenge', 
@@ -279,6 +272,7 @@ const seasons: Season[] = [
     ]
   }
 ];
+
 
 
 
@@ -365,288 +359,221 @@ const dailyTasks: Task[] = [
     id: 't12',
     title: 'Verify wallet security',
     description: 'Review and confirm your wallet security settings',
-    xp: 20,
-    completed: false,
-  },
-  {
-    id: 't13',
-    title: 'Complete intermediate module',
-    description: 'Finish an intermediate-level module in the Learn Center',
-    xp: 35,
-    completed: false,
-  },
-  {
-    id: 't14',
-    title: 'Try a basic dApp',
-    description: 'Interact with a basic decentralized application',
-    xp: 40,
-    completed: false,
-  },
-  {
-    id: 't15',
-    title: 'Perform wallet backup check',
-    description: 'Make sure your wallet backup is up to date',
-    xp: 20,
-    completed: false,
-  },
-  {
-    id: 't16',
-    title: 'Use an advanced dApp feature',
-    description: 'Explore and interact with an advanced dApp feature',
-    xp: 50,
-    completed: false,
-  },
-  {
-    id: 't17',
-    title: 'Stake AVAX',
-    description: 'Stake AVAX using a smart contract',
-    xp: 50,
-    completed: false,
-  },
-  {
-    id: 't18',
-    title: 'Vote in a DAO simulation',
-    description: 'Participate in a simulated DAO voting session',
-    xp: 45,
-    completed: false,
-  },
-  {
-    id: 't19',
-    title: 'Complete advanced-level quiz',
-    description: 'Finish a high-difficulty quiz in the Learn Center',
-    xp: 40,
-    completed: false,
-  },
-  {
-    id: 't20',
-    title: 'Give daily feedback',
-    description: 'Write a short feedback about your experience today',
-    xp: 25,
-    completed: false,
-  }
+   xp: 20,
+   completed: false,
+ },
+ {
+   id: 't13',
+   title: 'Complete intermediate module',
+   description: 'Finish an intermediate-level module in the Learn Center',
+   xp: 35,
+   completed: false,
+ },
+ {
+   id: 't14',
+   title: 'Try a basic dApp',
+   description: 'Interact with a basic decentralized application',
+   xp: 40,
+   completed: false,
+ },
+ {
+   id: 't15',
+   title: 'Perform wallet backup check',
+   description: 'Make sure your wallet backup is up to date',
+   xp: 20,
+   completed: false,
+ },
+ {
+   id: 't16',
+   title: 'Use an advanced dApp feature',
+   description: 'Explore and interact with an advanced dApp feature',
+   xp: 50,
+   completed: false,
+ },
+ {
+   id: 't17',
+   title: 'Stake AVAX',
+   description: 'Stake AVAX using a smart contract',
+   xp: 50,
+   completed: false,
+ },
+ {
+   id: 't18',
+   title: 'Vote in a DAO simulation',
+   description: 'Participate in a simulated DAO voting session',
+   xp: 45,
+   completed: false,
+ },
+ {
+   id: 't19',
+   title: 'Complete advanced-level quiz',
+   description: 'Finish a high-difficulty quiz in the Learn Center',
+   xp: 40,
+   completed: false,
+ },
+ {
+   id: 't20',
+   title: 'Give daily feedback',
+   description: 'Write a short feedback about your experience today',
+   xp: 25,
+   completed: false,
+ }
 ];
+
+
+
+
+
+
 
 // Get today's daily tasks (unchanged function)
 function getTodaysDailyTasks(tasks: Task[]): Task[] {
-  const today = new Date().toISOString().slice(0, 10);
-  let hash = 0;
-  for (let i = 0; i < today.length; i++) {
-    hash = today.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const shuffled = [...tasks];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    hash = (hash * 9301 + 49297) % 233280;
-    const j = Math.floor((hash / 233280) * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled.slice(0, 3);
+ const today = new Date().toISOString().slice(0, 10);
+ let hash = 0;
+ for (let i = 0; i < today.length; i++) {
+   hash = today.charCodeAt(i) + ((hash << 5) - hash);
+ }
+ const shuffled = [...tasks];
+ for (let i = shuffled.length - 1; i > 0; i--) {
+   hash = (hash * 9301 + 49297) % 233280;
+   const j = Math.floor((hash / 233280) * (i + 1));
+   [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+ }
+ return shuffled.slice(0, 3);
 }
 
 const todaysDailyTasks = getTodaysDailyTasks(dailyTasks);
 
 // Learn Center topics (unchanged)
 const learnTopics = [
-  {
-    "id": "what-is-web3",
-    "title": "What is Web3?",
-    "shortDescription": "Understand the next evolution of the internet",
-    "longDescription": "Web3 is the next internet evolution, decentralized and powered by blockchain technology. Unlike Web2, which is dynamic but centralized, Web3 prioritizes user ownership of data and identity. Web3 is governed by principles such as decentralization, ownership of assets and identity, blockchain transparency, open-source development, and permissionless participation."
-  },
-  {
-    "id": "what-is-blockchain",
-    "title": "What is a Blockchain?",
-    "shortDescription": "Learn about blockchain technology fundamentals",
-    "longDescription": "A blockchain is a distributed, digital, and immutable ledger designed for secure and transparent recording of transactions in a decentralized manner. Key features include immutability (data can't be altered once added), transparency (transactions visible to everyone), decentralization (no single controlling authority), and security (protected by cryptography). Data is stored in chronologically linked blocks containing a list of transactions, timestamps, and cryptographic hashes linking each block to its predecessor."
-  },
-  {
-    "id": "what-is-cryptocurrency",
-    "title": "What is a Cryptocurrency?",
-    "shortDescription": "Discover digital currencies secured by cryptography",
-    "longDescription": "A cryptocurrency is a digital currency secured by cryptography and recorded on the blockchain. Cryptocurrencies have various applications, including payments, utilities (such as Ethereum for gas fees), or value storage (like Bitcoin)."
-  },
-  {
-    "id": "securing-cryptocurrencies",
-    "title": "How Do You Secure Your Cryptocurrencies?",
-    "shortDescription": "Learn methods for safely storing your digital assets",
-    "longDescription": "Cryptocurrencies are stored using Crypto Wallets, which manage both your blockchain identity and assets, analogous to a combined bank and ID. Wallets are categorized as Hot Wallets (online-connected like MetaMask) and Cold Wallets (offline like Trezor). Wallets store private (non-shareable password) and public keys (shareable email-like identifier), sign transactions, interact with decentralized applications (dApps), and display balances and NFTs."
-  },
-  {
-    "id": "what-are-transactions",
-    "title": "What Are Transactions?",
-    "shortDescription": "Understand blockchain transaction processes",
-    "longDescription": "In Web3, a transaction records actions performed on the blockchain, such as sending tokens or interacting with smart contracts. The process involves user creation of a transaction, wallet signing using a private key, broadcasting to the network, validation by validators, and eventual inclusion in the blockchain. Transactions incur a Gas Fee, which compensates validators and prevents spam."
-  },
-  {
-    "id": "who-are-validators",
-    "title": "Who Are Validators and Why Are They Important?",
-    "shortDescription": "Explore the role and significance of blockchain validators",
-    "longDescription": "Validators verify blockchain transactions and create new blocks, crucial for maintaining blockchain security and integrity. They stake native blockchain tokens (e.g., AVAX on Avalanche) to participate. Validators proposing or validating blocks are selected based on their stake size. Honest validators earn token rewards, whereas malicious validators risk losing their stakes."
-  },
-  {
-    "id": "what-is-smart-contract",
-    "title": "What is a Smart Contract?",
-    "shortDescription": "Learn about self-executing blockchain programs",
-    "longDescription": "Smart contracts are self-executing programs on the blockchain that store data and trigger actions, like token transfers. They operate transparently, immutably, and automatically, removing the need for intermediaries."
-  },
-  {
-    "id": "what-are-dapps",
-    "title": "What are dApps?",
-    "shortDescription": "Understand decentralized applications running on blockchains",
-    "longDescription": "Decentralized applications (dApps) run on blockchain networks using smart contracts for operations and crypto wallets for identity and authentication. Common dApps include decentralized financial platforms (e.g., Uniswap), NFT marketplaces (e.g., OpenSea), and blockchain-based games (e.g., Axie Infinity)."
-  }
+ {
+   "id": "what-is-web3",
+   "title": "What is Web3?",
+   "shortDescription": "Understand the next evolution of the internet",
+   "longDescription": "Web3 is the next internet evolution, decentralized and powered by blockchain technology. Unlike Web2, which is dynamic but centralized, Web3 prioritizes user ownership of data and identity. Web3 is governed by principles such as decentralization, ownership of assets and identity, blockchain transparency, open-source development, and permissionless participation."
+ },
+ {
+   "id": "what-is-blockchain",
+   "title": "What is a Blockchain?",
+   "shortDescription": "Learn about blockchain technology fundamentals",
+   "longDescription": "A blockchain is a distributed, digital, and immutable ledger designed for secure and transparent recording of transactions in a decentralized manner. Key features include immutability (data can't be altered once added), transparency (transactions visible to everyone), decentralization (no single controlling authority), and security (protected by cryptography). Data is stored in chronologically linked blocks containing a list of transactions, timestamps, and cryptographic hashes linking each block to its predecessor."
+ },
+ {
+   "id": "what-is-cryptocurrency",
+   "title": "What is a Cryptocurrency?",
+   "shortDescription": "Discover digital currencies secured by cryptography",
+   "longDescription": "A cryptocurrency is a digital currency secured by cryptography and recorded on the blockchain. Cryptocurrencies have various applications, including payments, utilities (such as Ethereum for gas fees), or value storage (like Bitcoin)."
+ },
+ {
+   "id": "securing-cryptocurrencies",
+   "title": "How Do You Secure Your Cryptocurrencies?",
+   "shortDescription": "Learn methods for safely storing your digital assets",
+   "longDescription": "Cryptocurrencies are stored using Crypto Wallets, which manage both your blockchain identity and assets, analogous to a combined bank and ID. Wallets are categorized as Hot Wallets (online-connected like MetaMask) and Cold Wallets (offline like Trezor). Wallets store private (non-shareable password) and public keys (shareable email-like identifier), sign transactions, interact with decentralized applications (dApps), and display balances and NFTs."
+ },
+ {
+   "id": "what-are-transactions",
+   "title": "What Are Transactions?",
+   "shortDescription": "Understand blockchain transaction processes",
+   "longDescription": "In Web3, a transaction records actions performed on the blockchain, such as sending tokens or interacting with smart contracts. The process involves user creation of a transaction, wallet signing using a private key, broadcasting to the network, validation by validators, and eventual inclusion in the blockchain. Transactions incur a Gas Fee, which compensates validators and prevents spam."
+ },
+ {
+   "id": "who-are-validators",
+   "title": "Who Are Validators and Why Are They Important?",
+   "shortDescription": "Explore the role and significance of blockchain validators",
+   "longDescription": "Validators verify blockchain transactions and create new blocks, crucial for maintaining blockchain security and integrity. They stake native blockchain tokens (e.g., AVAX on Avalanche) to participate. Validators proposing or validating blocks are selected based on their stake size. Honest validators earn token rewards, whereas malicious validators risk losing their stakes."
+ },
+ {
+   "id": "what-is-smart-contract",
+   "title": "What is a Smart Contract?",
+   "shortDescription": "Learn about self-executing blockchain programs",
+   "longDescription": "Smart contracts are self-executing programs on the blockchain that store data and trigger actions, like token transfers. They operate transparently, immutably, and automatically, removing the need for intermediaries."
+ },
+ {
+   "id": "what-are-dapps",
+   "title": "What are dApps?",
+   "shortDescription": "Understand decentralized applications running on blockchains",
+   "longDescription": "Decentralized applications (dApps) run on blockchain networks using smart contracts for operations and crypto wallets for identity and authentication. Common dApps include decentralized financial platforms (e.g., Uniswap), NFT marketplaces (e.g., OpenSea), and blockchain-based games (e.g., Axie Infinity)."
+ }
 ];
 
 
 
-
-
 const Index = () => {
-  const [currentSeasonIdx, setCurrentSeasonIdx] = useState(0);
-  const [seasonsState, setSeasonsState] = useState<Season[]>(JSON.parse(JSON.stringify(seasons)));
-  const [currentXP, setCurrentXP] = useState(100); // Start with 100 XP for wallet connection
-  const [isConnected, setIsConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState('');
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [selectedLearnTopic, setSelectedLearnTopic] = useState<typeof learnTopics[0] | null>(null);
-  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
-  const [hasDisconnected, setHasDisconnected] = useState(false); // 新增：追踪是否手动断开过
+ const [currentSeasonIdx, setCurrentSeasonIdx] = useState(0);
+ const [seasonsState, setSeasonsState] = useState<Season[]>(JSON.parse(JSON.stringify(seasons)));
+ const [currentXP, setCurrentXP] = useState(100); // Start with 100 XP for wallet connection
+ const [isConnected, setIsConnected] = useState(false);
+ const [walletAddress, setWalletAddress] = useState('');
+ const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+ const [selectedLearnTopic, setSelectedLearnTopic] = useState<typeof learnTopics[0] | null>(null);
 
-  const { disconnect: wagmiDisconnect } = useDisconnect(); // 获取 wagmi 的断开函数
+ const currentSeason = seasonsState[currentSeasonIdx];
+ const completedTasks = currentSeason.tasks.filter(task => task.completed).length;
+ const totalTasks = currentSeason.tasks.length;
+ const progressToNextSeason = (completedTasks / totalTasks) * 100;
+ const completedRewards = currentSeason.tasks.filter(t => t.completed && t.reward).map(t => t.reward);
 
-  const currentSeason = seasonsState[currentSeasonIdx];
-  const completedTasks = currentSeason.tasks.filter(task => task.completed).length;
-  const totalTasks = currentSeason.tasks.length;
-  const progressToNextSeason = (completedTasks / totalTasks) * 100;
-  const completedRewards = currentSeason.tasks.filter(t => t.completed && t.reward).map(t => t.reward);
+ const handleWalletConnect = (address: string) => {
+   setWalletAddress(address);
+   setIsConnected(true);
+   
+   // Auto-complete wallet creation task
+   setSeasonsState(prev => {
+     const newSeasons = [...prev];
+     const firstTask = newSeasons[0].tasks.find(t => t.id === '1');
+     if (firstTask && !firstTask.completed) {
+       firstTask.completed = true;
+     }
+     return newSeasons;
+   });
+ };
 
-  const handleWalletConnect = (address: string) => {
-    setWalletAddress(address);
-    setIsConnected(true);
-    setHasDisconnected(false); // 重置断开状态
-    
-    // Auto-complete wallet creation task
-    setSeasonsState(prev => {
-      const newSeasons = [...prev];
-      const firstTask = newSeasons[0].tasks.find(t => t.id === '1');
-      if (firstTask && !firstTask.completed) {
-        firstTask.completed = true;
-      }
-      return newSeasons;
-    });
-  };
+ const handleDisconnect = () => {
+   setIsConnected(false);
+   setWalletAddress('');
+ };
 
-  const handleDisconnect = () => {
-    setShowLogoutDialog(true);
-  };
+ const handleCompleteTask = (taskId: string) => {
+   setSeasonsState(prev => {
+     const newSeasons = [...prev];
+     const season = newSeasons[currentSeasonIdx];
+     const taskIdx = season.tasks.findIndex(t => t.id === taskId);
+     if (taskIdx !== -1 && !season.tasks[taskIdx].completed) {
+       season.tasks[taskIdx].completed = true;
+       setCurrentXP(xp => xp + season.tasks[taskIdx].xp);
+     }
+     if (season.tasks.every(t => t.completed) && currentSeasonIdx < seasons.length - 1) {
+       setTimeout(() => setCurrentSeasonIdx(idx => idx + 1), 1000);
+     }
+     return newSeasons;
+   });
+ };
 
-  const confirmDisconnect = async () => {
-    try {
-      // 先断开 wagmi 连接
-      await wagmiDisconnect();
-      
-      // 然后更新本地状态
-      setIsConnected(false);
-      setWalletAddress('');
-      setHasDisconnected(true); // 标记为手动断开
-      setShowLogoutDialog(false);
-    } catch (error) {
-      console.error('Failed to disconnect:', error);
-      // 即使 wagmi 断开失败，也更新本地状态
-      setIsConnected(false);
-      setWalletAddress('');
-      setHasDisconnected(true);
-      setShowLogoutDialog(false);
-    }
-  };
+ const completeTaskByLearnTopic = (learnTopicId: string) => {
+   setSeasonsState(prev => {
+     const newSeasons = [...prev];
+     const season = newSeasons[currentSeasonIdx];
+     let updated = false;
+     for (const task of season.tasks) {
+       if (task.learnTopicId === learnTopicId && !task.completed) {
+         task.completed = true;
+         setCurrentXP(xp => xp + task.xp);
+         updated = true;
+       }
+     }
+     if (updated && season.tasks.every(t => t.completed) && currentSeasonIdx < seasons.length - 1) {
+       setTimeout(() => setCurrentSeasonIdx(idx => idx + 1), 1000);
+     }
+     return newSeasons;
+   });
+ };
 
-  const handleCompleteTask = (taskId: string) => {
-    setSeasonsState(prev => {
-      const newSeasons = [...prev];
-      const season = newSeasons[currentSeasonIdx];
-      const taskIdx = season.tasks.findIndex(t => t.id === taskId);
-      if (taskIdx !== -1 && !season.tasks[taskIdx].completed) {
-        season.tasks[taskIdx].completed = true;
-        setCurrentXP(xp => xp + season.tasks[taskIdx].xp);
-      }
-      if (season.tasks.every(t => t.completed) && currentSeasonIdx < seasons.length - 1) {
-        setTimeout(() => setCurrentSeasonIdx(idx => idx + 1), 1000);
-      }
-      return newSeasons;
-    });
-  };
+ if (!isConnected) {
+   return <RealWalletConnect onConnect={handleWalletConnect} />;
+ }
 
-  const completeTaskByLearnTopic = (learnTopicId: string) => {
-    setSeasonsState(prev => {
-      const newSeasons = [...prev];
-      const season = newSeasons[currentSeasonIdx];
-      let updated = false;
-      for (const task of season.tasks) {
-        if (task.learnTopicId === learnTopicId && !task.completed) {
-          task.completed = true;
-          setCurrentXP(xp => xp + task.xp);
-          updated = true;
-        }
-      }
-      if (updated && season.tasks.every(t => t.completed) && currentSeasonIdx < seasons.length - 1) {
-        setTimeout(() => setCurrentSeasonIdx(idx => idx + 1), 1000);
-      }
-      return newSeasons;
-    });
-  };
-
-
-
-
-  if (!isConnected) {
-    return <RealWalletConnect onConnect={handleWalletConnect} isReconnecting={hasDisconnected} />;
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-cyber-dark">
-      {/* Logout Confirmation Dialog */}
-      <Dialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Power className="w-5 h-5 text-red-400" />
-              Disconnect Wallet
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                Are you sure you want to disconnect your wallet? Your progress will be saved and you can reconnect anytime.
-              </p>
-            </div>
-            <div className="p-3 rounded-lg bg-amber-500/10 border-amber-500/20">
-             <div className="flex items-center gap-2">
-               <AlertCircle className="w-4 h-4 text-amber-500" />
-               <span className="text-sm font-medium text-amber-500">Don't worry!</span>
-             </div>
-             <p className="text-sm text-muted-foreground mt-1">
-               Your XP ({currentXP}), completed tasks, and progress are automatically saved.
-             </p>
-           </div>
-           <div className="flex gap-3">
-             <Button 
-               variant="outline" 
-               onClick={() => setShowLogoutDialog(false)}
-               className="flex-1"
-             >
-               Cancel
-             </Button>
-             <Button 
-               onClick={confirmDisconnect}
-               className="flex-1 bg-red-500 hover:bg-red-600 text-white"
-             >
-               <LogOut className="w-4 h-4 mr-2" />
-               Disconnect
-             </Button>
-           </div>
-         </div>
-       </DialogContent>
-     </Dialog>
-
+ return (
+   <div className="min-h-screen bg-gradient-to-br from-background via-background to-cyber-dark">
      {/* Header */}
      <header className="border-b border-cyber-blue/20 bg-card/80 backdrop-blur-sm">
        <div className="container mx-auto px-4 py-4">
@@ -672,12 +599,7 @@ const Index = () => {
                  <p className="text-sm text-muted-foreground">Wallet</p>
                  <p className="text-sm font-mono text-cyber-blue">{walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</p>
                </div>
-               <Button 
-                 variant="outline" 
-                 size="sm" 
-                 onClick={handleDisconnect}
-                 className="border-red-500/30 hover:bg-red-500/10 hover:border-red-500/50"
-               >
+               <Button variant="outline" size="sm" onClick={handleDisconnect}>
                  <LogOut className="w-4 h-4" />
                </Button>
              </div>
@@ -685,6 +607,14 @@ const Index = () => {
          </div>
        </div>
      </header>
+
+
+
+
+
+
+
+
 
      <div className="container mx-auto px-4 py-8">
        <Tabs defaultValue="battlepass" className="w-full">
@@ -705,8 +635,6 @@ const Index = () => {
              Learn
            </TabsTrigger>
          </TabsList>
-
-
 
          <TabsContent value="battlepass">
            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -874,9 +802,6 @@ const Index = () => {
                  </CardContent>
                </Card>
 
-
-
-
                {/* Daily Tasks */}
                <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
                  <CardHeader>
@@ -950,6 +875,9 @@ const Index = () => {
                </div>
              </CardContent>
            </Card>
+
+
+
 
            {/* Learn Center */}
            <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
