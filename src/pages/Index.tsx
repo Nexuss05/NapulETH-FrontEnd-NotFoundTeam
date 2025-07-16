@@ -413,6 +413,59 @@ function getTodaysDailyTasks(tasks: Task[]): Task[] {
 
 const todaysDailyTasks = getTodaysDailyTasks(dailyTasks);
 
+// Learn Center topics
+const learnTopics = [
+  {
+    "id": "what-is-web3",
+    "title": "What is Web3?",
+    "shortDescription": "Understand the next evolution of the internet",
+    "longDescription": "Web3 is the next internet evolution, decentralized and powered by blockchain technology. Unlike Web2, which is dynamic but centralized, Web3 prioritizes user ownership of data and identity. Web3 is governed by principles such as decentralization, ownership of assets and identity, blockchain transparency, open-source development, and permissionless participation."
+  },
+  {
+    "id": "what-is-blockchain",
+    "title": "What is a Blockchain?",
+    "shortDescription": "Learn about blockchain technology fundamentals",
+    "longDescription": "A blockchain is a distributed, digital, and immutable ledger designed for secure and transparent recording of transactions in a decentralized manner. Key features include immutability (data can't be altered once added), transparency (transactions visible to everyone), decentralization (no single controlling authority), and security (protected by cryptography). Data is stored in chronologically linked blocks containing a list of transactions, timestamps, and cryptographic hashes linking each block to its predecessor."
+  },
+  {
+    "id": "what-is-cryptocurrency",
+    "title": "What is a Cryptocurrency?",
+    "shortDescription": "Discover digital currencies secured by cryptography",
+    "longDescription": "A cryptocurrency is a digital currency secured by cryptography and recorded on the blockchain. Cryptocurrencies have various applications, including payments, utilities (such as Ethereum for gas fees), or value storage (like Bitcoin)."
+  },
+  {
+    "id": "securing-cryptocurrencies",
+    "title": "How Do You Secure Your Cryptocurrencies?",
+    "shortDescription": "Learn methods for safely storing your digital assets",
+    "longDescription": "Cryptocurrencies are stored using Crypto Wallets, which manage both your blockchain identity and assets, analogous to a combined bank and ID. Wallets are categorized as Hot Wallets (online-connected like MetaMask) and Cold Wallets (offline like Trezor). Wallets store private (non-shareable password) and public keys (shareable email-like identifier), sign transactions, interact with decentralized applications (dApps), and display balances and NFTs."
+  },
+  {
+    "id": "what-are-transactions",
+    "title": "What Are Transactions?",
+    "shortDescription": "Understand blockchain transaction processes",
+    "longDescription": "In Web3, a transaction records actions performed on the blockchain, such as sending tokens or interacting with smart contracts. The process involves user creation of a transaction, wallet signing using a private key, broadcasting to the network, validation by validators, and eventual inclusion in the blockchain. Transactions incur a Gas Fee, which compensates validators and prevents spam."
+  },
+  {
+    "id": "who-are-validators",
+    "title": "Who Are Validators and Why Are They Important?",
+    "shortDescription": "Explore the role and significance of blockchain validators",
+    "longDescription": "Validators verify blockchain transactions and create new blocks, crucial for maintaining blockchain security and integrity. They stake native blockchain tokens (e.g., AVAX on Avalanche) to participate. Validators proposing or validating blocks are selected based on their stake size. Honest validators earn token rewards, whereas malicious validators risk losing their stakes."
+  },
+  {
+    "id": "what-is-smart-contract",
+    "title": "What is a Smart Contract?",
+    "shortDescription": "Learn about self-executing blockchain programs",
+    "longDescription": "Smart contracts are self-executing programs on the blockchain that store data and trigger actions, like token transfers. They operate transparently, immutably, and automatically, removing the need for intermediaries."
+  },
+  {
+    "id": "what-are-dapps",
+    "title": "What are dApps?",
+    "shortDescription": "Understand decentralized applications running on blockchains",
+    "longDescription": "Decentralized applications (dApps) run on blockchain networks using smart contracts for operations and crypto wallets for identity and authentication. Common dApps include decentralized financial platforms (e.g., Uniswap), NFT marketplaces (e.g., OpenSea), and blockchain-based games (e.g., Axie Infinity)."
+  }
+
+];
+
 const Index = () => {
   const [currentSeasonIdx, setCurrentSeasonIdx] = useState(0);
   const [seasonsState, setSeasonsState] = useState<Season[]>(JSON.parse(JSON.stringify(seasons)));
@@ -420,6 +473,7 @@ const Index = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedLearnTopic, setSelectedLearnTopic] = useState<typeof learnTopics[0] | null>(null);
 
   const currentSeason = seasonsState[currentSeasonIdx];
   const completedTasks = currentSeason.tasks.filter(task => task.completed).length;
@@ -471,7 +525,7 @@ const Index = () => {
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-cyber-blue to-cyber-purple bg-clip-text text-transparent">
                   CryptoQuest
                 </h1>
-                <p className="text-sm text-muted-foreground">La tua avventura crypto inizia qui</p>
+                <p className="text-sm text-muted-foreground">Your crypto adventure starts here.</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -589,12 +643,12 @@ const Index = () => {
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <h4 className="font-semibold mb-2">Descrizione</h4>
+                                <h4 className="font-semibold mb-2">Description</h4>
                                 <p className="text-sm text-muted-foreground">{task.description}</p>
                               </div>
                               {task.reward && (
                                 <div>
-                                  <h4 className="font-semibold mb-2">Ricompensa</h4>
+                                  <h4 className="font-semibold mb-2">Reward</h4>
                                   <Badge variant="secondary" className="text-xs">
                                     <Gift className="w-3 h-3 mr-1" />
                                     {task.reward}
@@ -640,17 +694,17 @@ const Index = () => {
                   <CardHeader>
                     <CardTitle className="text-lg font-bold text-cyber-blue flex items-center gap-2">
                       <TrendingUp className="w-5 h-5" />
-                      Statistiche
+                      Statistics
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Task Completate</span>
+                        <span className="text-sm text-muted-foreground">Task Done</span>
                         <span className="font-bold text-cyber-blue">{completedTasks}/{totalTasks}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">XP Guadagnati</span>
+                        <span className="text-sm text-muted-foreground">XP Earned</span>
                         <span className="font-bold text-cyber-purple">{currentXP}</span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -661,12 +715,12 @@ const Index = () => {
                   </CardContent>
                 </Card>
 
-                {/* Ricompense Season */}
+                {/* Reward Season */}
                 <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
                   <CardHeader>
                     <CardTitle className="text-lg font-bold text-cyber-blue flex items-center gap-2">
                       <Gift className="w-5 h-5" />
-                      Ricompense Season
+                      Reward Season
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -725,26 +779,33 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-blue">Blockchain Basics</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Impara i fondamenti della blockchain</p>
-                    <Button variant="outline" size="sm">Inizia</Button>
-                  </div>
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-purple">DeFi Guide</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Esplora i protocolli DeFi</p>
-                    <Button variant="outline" size="sm">Inizia</Button>
-                  </div>
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-neon">Best Practice di Sicurezza</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Tieni al sicuro i tuoi asset crypto</p>
-                    <Button variant="outline" size="sm">Inizia</Button>
-                  </div>
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-blue">Strategie di Trading</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Impara a fare trading di criptovalute</p>
-                    <Button variant="outline" size="sm">Inizia</Button>
-                  </div>
+                  {learnTopics.map((topic) => (
+                    <Dialog key={topic.id} open={selectedLearnTopic?.id === topic.id} onOpenChange={open => setSelectedLearnTopic(open ? topic : null)}>
+                      <DialogTrigger asChild>
+                        <div
+                          className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20 cursor-pointer hover:scale-105 transition-all"
+                          onClick={() => setSelectedLearnTopic(topic)}
+                        >
+                          <h3 className="font-bold mb-2 text-cyber-blue">{topic.title}</h3>
+                          <p className="text-sm text-muted-foreground mb-3">{topic.shortDescription}</p>
+                          <Button variant="outline" size="sm">Learn More</Button>
+                        </div>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-2">
+                            {topic.title}
+                          </DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="font-semibold mb-2">Description</h4>
+                            <p className="text-sm text-muted-foreground">{topic.longDescription}</p>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  ))}
                 </div>
               </CardContent>
             </Card>
