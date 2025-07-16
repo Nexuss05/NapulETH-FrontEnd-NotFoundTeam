@@ -27,6 +27,19 @@ import {
   History,
   Send
 } from 'lucide-react';
+import WalletIcon from '@/assets/icons/wallet.svg';
+import SecurityIcon from '@/assets/icons/security.svg';
+import Web3Icon from '@/assets/icons/web3.svg';
+import CryptoIcon from '@/assets/icons/crypto.svg';
+import TestnetIcon from '@/assets/icons/testnet.svg';
+
+const season1TaskIcons: Record<string, JSX.Element> = {
+  '1': <img src={WalletIcon} alt="Wallet" className="w-20 h-20" />,
+  '2': <img src={SecurityIcon} alt="Security" className="w-20 h-20" />,
+  '3': <img src={Web3Icon} alt="Web3" className="w-20 h-20" />,
+  '4': <img src={CryptoIcon} alt="Crypto" className="w-20 h-20" />,
+  '5': <img src={TestnetIcon} alt="Testnet" className="w-20 h-20" />,
+};
 
 interface Task {
   id: string;
@@ -591,16 +604,18 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="battlepass" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="battlepass">Wallet Pass</TabsTrigger>
-            <TabsTrigger value="send">
+            <TabsTrigger value="battlepass" className="data-[state=active]:bg-[#9933FF] data-[state=active]:text-white">
+              Wallet Pass
+            </TabsTrigger>
+            <TabsTrigger value="send" className="data-[state=active]:bg-[#9933FF] data-[state=active]:text-white">
               <Send className="w-4 h-4 mr-2" />
               Send
             </TabsTrigger>
-            <TabsTrigger value="transactions">
+            <TabsTrigger value="transactions" className="data-[state=active]:bg-[#9933FF] data-[state=active]:text-white">
               <History className="w-4 h-4 mr-2" />
               Transactions
             </TabsTrigger>
-            <TabsTrigger value="learn">
+            <TabsTrigger value="learn" className="data-[state=active]:bg-[#9933FF] data-[state=active]:text-white">
               <BookOpen className="w-4 h-4 mr-2" />
               Learn
             </TabsTrigger>
@@ -616,18 +631,18 @@ const Index = () => {
                       <Trophy className="w-5 h-5" />
                       {currentSeason.title}
                     </CardTitle>
-                    <div className="flex items-center gap-4">
+                    {/* <div className="flex items-center gap-4">
                       <div className="flex-1">
                         <div className="flex justify-between text-sm mb-2">
                           <span>Season Progress</span>
                           <span>{Math.round(progressToNextSeason)}%</span>
                         </div>
                         <Progress value={progressToNextSeason} className="h-2" />
-                      </div>
-                      <Badge variant="outline" className="border-cyber-red text-cyber-purple">
+                      </div> */}
+                      {/* <Badge variant="outline" className="border-cyber-purple text-cyber-purple">
                         {completedTasks} / {totalTasks} Task
-                      </Badge>
-                    </div>
+                      </Badge> */}
+                    {/* </div> */}
                   </CardHeader>
                   <CardContent>
                     <div className="mb-4">
@@ -646,19 +661,24 @@ const Index = () => {
                               onClick={() => setSelectedTask(task)}
                             >
                               <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                                  task.completed ? 'bg-gradient-to-br from-cyber-blue to-cyber-purple' : 'bg-gray-500'
-                                }`}>
-                                  {task.completed ? (
-                                    <CheckCircle className="w-6 h-6 text-white" />
-                                  ) : (
-                                    <Target className="w-6 h-6 text-gray-300" />
-                                  )}
-                                </div>
+                                {task.completed ? (
+                                  currentSeason.season === 1 && season1TaskIcons[task.id]
+                                    ? (
+                                      <span className="flex items-center justify-center">{season1TaskIcons[task.id]}</span>
+                                    ) : (
+                                      <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-cyber-blue to-cyber-purple">
+                                        <CheckCircle className="w-6 h-6 text-white" />
+                                      </div>
+                                    )
+                                ) : (
+                                  <div className="w-20 h-20 rounded-full flex items-center justify-center bg-gray-500">
+                                    <Target className="w-16 h-16 text-gray-300" />
+                                  </div>
+                                )}
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <h3 className="font-bold text-lg">{task.title}</h3>
-                                    <Badge variant="outline" style={{ color: '#9933FF' }} className="text-xs">
+                                    <Badge variant="outline" style={{ color: '#9933FF', borderColor: '#9933FF' }} className="text-xs">
                                       +{task.xp} XP
                                     </Badge>
                                   </div>
