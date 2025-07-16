@@ -32,6 +32,7 @@ import SecurityIcon from '@/assets/icons/security.svg';
 import Web3Icon from '@/assets/icons/web3.svg';
 import CryptoIcon from '@/assets/icons/crypto.svg';
 import TestnetIcon from '@/assets/icons/testnet.svg';
+import Icon from '@/assets/icons/icon.png';
 
 const season1TaskIcons: Record<string, JSX.Element> = {
   '1': <img src={WalletIcon} alt="Wallet" className="w-20 h-20" />,
@@ -572,25 +573,25 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-cyber-blue to-cyber-purple rounded-full flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
+              <div className="w-20 h-20 flex items-center justify-center">
+                <img src={Icon} alt="Icon" className="w-13 h-13" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-cyber-blue to-cyber-purple bg-clip-text text-transparent">
+                <h1 className="text-2xl mb-2 font-bold bg-gradient-to-r from-cyber-blue to-cyber-purple bg-clip-text text-transparent">
                   CryptoQuest
                 </h1>
-                <p className="text-sm text-muted-foreground">Your crypto adventure starts here.</p>
+                <p className="text-sm text-muted-foreground">Your crypto adventure starts here!</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">Total XP</p>
-                <p className="text-lg font-bold text-cyber-blue">{currentXP}</p>
+                <p className="text-lg font-bold text-cyber-white">{currentXP}</p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 <div className="text-right">
                   <p className="text-sm text-muted-foreground">Wallet</p>
-                  <p className="text-sm font-mono text-cyber-blue">{walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</p>
+                  <p className="text-sm font-mono text-cyber-white mt-1.5">{walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</p>
                 </div>
                 <Button variant="outline" size="sm" onClick={handleDisconnect}>
                   <LogOut className="w-4 h-4" />
@@ -731,7 +732,7 @@ const Index = () => {
                 {/* Current Season */}
                 <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
                   <CardHeader>
-                    <CardTitle className="text-lg font-bold text-cyber-purple flex items-center gap-2">
+                    <CardTitle className="text-lg font-bold text-cyber-blue flex items-center gap-2">
                       <Award className="w-5 h-5" />
                       Current Season
                     </CardTitle>
@@ -745,7 +746,7 @@ const Index = () => {
                       <p className="text-sm text-muted-foreground mb-4">
                         {completedTasks} / {totalTasks} Task
                       </p>
-                      <Progress value={progressToNextSeason} className="h-2" />
+                      <Progress value={progressToNextSeason} className="h-5" />
                     </div>
                   </CardContent>
                 </Card>
@@ -762,15 +763,15 @@ const Index = () => {
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Task Done</span>
-                        <span className="font-bold text-cyber-blue">{completedTasks}/{totalTasks}</span>
+                        <span className="font-bold text-cyber-white">{completedTasks}/{totalTasks}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">XP Earned</span>
-                        <span className="font-bold text-cyber-purple">{currentXP}</span>
+                        <span className="font-bold text-cyber-white">{currentXP}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Season</span>
-                        <span className="font-bold text-cyber-neon">{currentSeason.season}</span>
+                        <span className="font-bold text-cyber-white">{currentSeason.season}</span>
                       </div>
                     </div>
                   </CardContent>
@@ -811,9 +812,9 @@ const Index = () => {
                   <CardContent>
                     <div className="space-y-3">
                       {todaysDailyTasks.map((task) => (
-                        <div key={task.id} className="flex items-center gap-3 p-3 rounded-lg bg-cyber-dark/30">
-                          <div className={`w-2 h-2 rounded-full ${
-                            task.completed ? 'bg-green-400' : 'bg-yellow-400'
+                        <div key={task.id} className="flex items-center gap-3 p-1 rounded-lg bg-cyber-dark/30">
+                          <div className={`w-3 h-3 rounded-full ${
+                            task.completed ? 'bg-green-400' : 'bg-purple-400'
                           }`} />
                           <div className="flex-1">
                             <p className="text-sm font-medium">{task.title}</p>
