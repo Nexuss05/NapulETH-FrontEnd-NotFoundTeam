@@ -8,12 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { WalletConnect } from '@/components/WalletConnect';
 import { TransactionHistory } from '@/components/TransactionHistory';
 import { TransactionForm } from '@/components/TransactionForm';
-import { 
-  Trophy, 
-  Star, 
-  Lock, 
-  CheckCircle, 
-  Zap, 
+import {
+  Trophy,
+  Star,
+  Lock,
+  CheckCircle,
+  Zap,
   Award,
   Target,
   BookOpen,
@@ -34,130 +34,461 @@ interface Task {
   description: string;
   xp: number;
   completed: boolean;
-  category: 'basics' | 'trading' | 'defi' | 'security';
+  reward?: string;
+  learnTopicId?: string; // Aggiunto per collegare la task al topic del Learn Center
 }
 
-interface Level {
-  level: number;
+interface Season {
+  season: number;
   title: string;
-  xpRequired: number;
-  rewards: string[];
-  unlocked: boolean;
   description: string;
-  requirements: string[];
-  tips: string[];
+  tasks: Task[];
+  rewards: string[];
 }
 
-const tasks: Task[] = [
+const seasons: Season[] = [
   {
-    id: '1',
-    title: 'Connect Your Wallet',
-    description: 'Connect your MetaMask wallet to the platform',
-    xp: 100,
-    completed: false,
-    category: 'basics'
+    season: 1,
+    title: 'Season 1: The Beginning',
+    description: 'Start your adventure in the crypto world! Complete all the tasks to unlock the next season.',
+    rewards: ['Welcome Badge', 'Basic Tutorial Access'],
+    tasks: [
+      {
+        id: '1',
+        title: 'Create Your Personal Wallet',
+        description: 'Set up your first crypto wallet to securely store your assets.',
+        xp: 100,
+        completed: false,
+        reward: 'Wallet Badge'
+      },
+      {
+        id: '2',
+        title: 'Explore the Platform',
+        description: 'Familiarize yourself with the different sections of the platform.',
+        xp: 50,
+        completed: false,
+        reward: 'Platform Badge'
+      },
+      {
+        id: '3',
+        title: 'Complete the "What is Web3" Module',
+        description: 'Learn the basics of Web3 technology.',
+        xp: 150,
+        completed: false,
+        reward: 'Web3 Badge',
+        learnTopicId: 'what-is-web3',
+      },
+      {
+        id: '4',
+        title: 'Complete the "What is a Cryptocurrency" Module',
+        description: 'Understand the fundamentals of cryptocurrencies.',
+        xp: 150,
+        completed: false,
+        reward: 'Cryptocurrency Badge',
+        learnTopicId: 'what-is-cryptocurrency',
+      },
+      {
+        id: '5',
+        title: 'Perform Your First Demo Transaction (Testnet)',
+        description: 'Conduct your first cryptocurrency transaction in a safe environment.',
+        xp: 200,
+        completed: false,
+        reward: 'Testnet Badge'
+      }
+    ]
   },
   {
-    id: '2',
-    title: 'Complete Profile',
-    description: 'Add your basic information',
-    xp: 50,
-    completed: false,
-    category: 'basics'
+    season: 2,
+    title: 'Season 2: Crypto Explorer',
+    description: 'Become a true explorer of the crypto world! New challenges await you.',
+    rewards: ['Explorer Badge', 'Advanced Tutorial Access'],
+    tasks: [
+      { 
+        id: '6', 
+        title: 'Set Advanced Wallet Security (2FA, Seed Phrase Backup)', 
+        description: 'Enhance your wallet security by enabling additional features.', 
+        xp: 200, 
+        completed: false, 
+        reward: 'Advanced Security Badge' 
+      },
+      { 
+        id: '7', 
+        title: 'Complete the "What is a Blockchain" Module', 
+        description: 'Learn about blockchain technology and its applications.', 
+        xp: 200, 
+        completed: false, 
+        reward: 'Blockchain Badge',
+        learnTopicId: 'what-is-blockchain',
+      },
+      { 
+        id: '8', 
+        title: 'Complete the "How Do You Secure Your Cryptocurrencies?" Module', 
+        description: 'Understand best practices for cryptocurrency security.', 
+        xp: 200, 
+        completed: false, 
+        reward: 'Secure Cryptocurrencies Badge',
+        learnTopicId: 'securing-cryptocurrencies',
+      },
+      { 
+        id: '9', 
+        title: 'Perform 3 Mainnet Transactions', 
+        description: 'Conduct three real cryptocurrency transactions.', 
+        xp: 300, 
+        completed: false, 
+        reward: 'Mainnet Transaction Badge' 
+      },
+      { 
+        id: '10', 
+        title: 'Interact with a Basic dApp', 
+        description: 'Experience decentralized applications firsthand.', 
+        xp: 250, 
+        completed: false, 
+        reward: 'dApp Badge' 
+      },
+      { 
+        id: '11', 
+        title: 'Complete the "What are Transactions?" Module', 
+        description: 'Dive deeper into how crypto transactions function.', 
+        xp: 200, 
+        completed: false, 
+        reward: 'Transactions Badge',
+        learnTopicId: 'what-are-transactions',
+      },
+      { 
+        id: '12', 
+        title: 'Complete the "Who are Validators and Why Are They Important?" Module', 
+        description: 'Understand the role and significance of validators.', 
+        xp: 250, 
+        completed: false, 
+        reward: 'Validators Badge',
+        learnTopicId: 'who-are-validators',
+      }
+    ]
   },
   {
-    id: '3',
-    title: 'First Transaction',
-    description: 'Execute your first blockchain transaction',
-    xp: 200,
-    completed: false,
-    category: 'trading'
-  },
-  {
-    id: '4',
-    title: 'Learn DeFi Basics',
-    description: 'Complete the DeFi tutorial',
-    xp: 150,
-    completed: false,
-    category: 'defi'
-  },
-  {
-    id: '5',
-    title: 'Setup 2FA',
-    description: 'Enable two-factor authentication',
-    xp: 75,
-    completed: false,
-    category: 'security'
+    season: 3,
+    title: 'Season 3: Crypto Master',
+    description: 'Prove your mastery by completing all the advanced tasks!',
+    rewards: ['Master Badge', 'VIP Access'],
+    tasks: [
+      { 
+        id: '13', 
+        title: 'Interact with a Smart Contract (e.g., Staking)', 
+        description: 'Utilize smart contracts for staking activities.', 
+        xp: 400, 
+        completed: false, 
+        reward: 'Staking Badge' 
+      },
+      { 
+        id: '14', 
+        title: 'Complete the "What is a Smart Contract?" Module', 
+        description: 'Learn the fundamentals of smart contracts.', 
+        xp: 300, 
+        completed: false, 
+        reward: 'Smart Contract Badge',
+        learnTopicId: 'what-is-smart-contract',
+      },
+      { 
+        id: '15', 
+        title: 'Participate in DAO Governance (Vote at Least Once)', 
+        description: 'Engage in decentralized governance processes.', 
+        xp: 500, 
+        completed: false, 
+        reward: 'DAO Badge' 
+      },
+      { 
+        id: '16', 
+        title: 'Complete the "What are dApps?" Module', 
+        description: 'Discover decentralized applications in depth.', 
+        xp: 300, 
+        completed: false, 
+        reward: 'dApps Badge',
+        learnTopicId: 'what-are-dapps',
+      },
+      { 
+        id: '17', 
+        title: 'Provide Liquidity on a dApp (Liquidity Pool)', 
+        description: 'Participate in liquidity pools on supported dApps.', 
+        xp: 500, 
+        completed: false, 
+        reward: 'Liquidity Badge' 
+      },
+      { 
+        id: '18', 
+        title: 'Perform 5 Advanced Transactions (e.g., Swap)', 
+        description: 'Execute complex crypto transactions like swaps.', 
+        xp: 400, 
+        completed: false, 
+        reward: 'Advanced Transactions Badge' 
+      },
+      { 
+        id: '19', 
+        title: 'Write a Brief Review on a Used dApp', 
+        description: 'Share feedback on a dApp.', 
+        xp: 250, 
+        completed: false, 
+        reward: 'Brief Review Badge' 
+      },
+      { 
+        id: '20', 
+        title: 'Obtain an NFT from a Supported Platform', 
+        description: 'Acquire a non-fungible token (NFT).', 
+        xp: 300, 
+        completed: false, 
+        reward: 'NFT Badge' 
+      },
+      { 
+        id: '21', 
+        title: 'Complete an Advanced Simulated Trading Challenge', 
+        description: 'Participate in simulated trading scenarios.', 
+        xp: 400, 
+        completed: false, 
+        reward: 'ASTC Badge' 
+      },
+      { 
+        id: '22', 
+        title: 'Create an Advanced Feature Tutorial or Guide', 
+        description: 'Develop a tutorial on a complex platform feature.', 
+        xp: 500, 
+        completed: false, 
+        reward: 'Master Badge' 
+      }
+    ]
   }
 ];
 
-const levels: Level[] = [
+// Inserisco la lista delle daily task separata
+const dailyTasks: Task[] = [
   {
-    level: 1,
-    title: 'Crypto Newbie',
-    xpRequired: 0,
-    rewards: ['Welcome Badge', 'Basic Tutorial Access'],
-    unlocked: true,
-    description: 'Welcome to the crypto world! Start your journey by learning the basics.',
-    requirements: ['Complete registration', 'Connect wallet'],
-    tips: ['Take your time to read everything', 'Don\'t rush', 'Ask questions in the community']
+    id: 't1',
+    title: 'Log into your account',
+    description: 'Sign in at least once today',
+    xp: 10,
+    completed: false,
   },
   {
-    level: 2,
-    title: 'Wallet Explorer',
-    xpRequired: 150,
-    rewards: ['Wallet Badge', 'Transaction Tutorial'],
-    unlocked: false,
-    description: 'Learn to manage your wallet and make your first transactions safely.',
-    requirements: ['Connect wallet', 'Complete profile', 'Study security basics'],
-    tips: ['Always save your seed phrase', 'Always check recipient address', 'Start with small amounts']
+    id: 't2',
+    title: 'Check your wallet balance',
+    description: 'View your wallet balance',
+    xp: 15,
+    completed: false,
   },
   {
-    level: 3,
-    title: 'Trader Apprentice',
-    xpRequired: 350,
-    rewards: ['Trading Badge', 'Market Analysis Tools'],
-    unlocked: false,
-    description: 'Discover crypto markets and learn trading basics.',
-    requirements: ['Execute first transaction', 'Study basic charts', 'Understand order types'],
-    tips: ['DYOR (Do Your Own Research)', 'Don\'t invest more than you can afford to lose', 'Use stop losses']
+    id: 't3',
+    title: 'Review your transaction history',
+    description: 'Check the history of your past transactions',
+    xp: 15,
+    completed: false,
   },
   {
-    level: 4,
-    title: 'DeFi Student',
-    xpRequired: 500,
-    rewards: ['DeFi Badge', 'Yield Farming Access'],
-    unlocked: false,
-    description: 'Explore the world of decentralized finance.',
-    requirements: ['Complete DeFi tutorial', 'Try a DEX', 'Understand liquidity pools'],
-    tips: ['Watch out for gas fees', 'Understand impermanent loss risks', 'Start with trusted protocols']
+    id: 't4',
+    title: 'Complete one quick module quiz',
+    description: 'Take a short quiz in the Learn Center',
+    xp: 25,
+    completed: false,
   },
   {
-    level: 5,
-    title: 'Security Expert',
-    xpRequired: 650,
-    rewards: ['Security Badge', 'Advanced Features'],
-    unlocked: false,
-    description: 'Become a blockchain security expert.',
-    requirements: ['Enable 2FA', 'Study best practices', 'Complete security quiz'],
-    tips: ['Never share private keys', 'Use hardware wallet for large amounts', 'Always verify smart contracts']
+    id: 't5',
+    title: 'Perform one transaction',
+    description: 'Make any transaction using your wallet',
+    xp: 30,
+    completed: false,
+  },
+  {
+    id: 't6',
+    title: 'Send AVAX',
+    description: 'Send AVAX to a friend or to another wallet of yours',
+    xp: 30,
+    completed: false,
+  },
+  {
+    id: 't7',
+    title: 'Check Learn Center updates',
+    description: 'See if there are new updates in the Learn Center',
+    xp: 20,
+    completed: false,
+  },
+  {
+    id: 't8',
+    title: 'Explore a new feature',
+    description: 'Try out a new feature on the platform',
+    xp: 20,
+    completed: false,
+  },
+  {
+    id: 't9',
+    title: 'Use the AI assistant',
+    description: 'Ask a question to the AI assistant',
+    xp: 25,
+    completed: false,
+  },
+  {
+    id: 't10',
+    title: 'Perform a testnet transaction',
+    description: 'Complete a transaction on the testnet',
+    xp: 20,
+    completed: false,
+  },
+  {
+    id: 't11',
+    title: 'View AVAX price trends',
+    description: 'Check the current and historical price trends of AVAX',
+    xp: 15,
+    completed: false,
+  },
+  {
+    id: 't12',
+    title: 'Verify wallet security',
+    description: 'Review and confirm your wallet security settings',
+    xp: 20,
+    completed: false,
+  },
+  {
+    id: 't13',
+    title: 'Complete intermediate module',
+    description: 'Finish an intermediate-level module in the Learn Center',
+    xp: 35,
+    completed: false,
+  },
+  {
+    id: 't14',
+    title: 'Try a basic dApp',
+    description: 'Interact with a basic decentralized application',
+    xp: 40,
+    completed: false,
+  },
+  {
+    id: 't15',
+    title: 'Perform wallet backup check',
+    description: 'Make sure your wallet backup is up to date',
+    xp: 20,
+    completed: false,
+  },
+  {
+    id: 't16',
+    title: 'Use an advanced dApp feature',
+    description: 'Explore and interact with an advanced dApp feature',
+    xp: 50,
+    completed: false,
+  },
+  {
+    id: 't17',
+    title: 'Stake AVAX',
+    description: 'Stake AVAX using a smart contract',
+    xp: 50,
+    completed: false,
+  },
+  {
+    id: 't18',
+    title: 'Vote in a DAO simulation',
+    description: 'Participate in a simulated DAO voting session',
+    xp: 45,
+    completed: false,
+  },
+  {
+    id: 't19',
+    title: 'Complete advanced-level quiz',
+    description: 'Finish a high-difficulty quiz in the Learn Center',
+    xp: 40,
+    completed: false,
+  },
+  {
+    id: 't20',
+    title: 'Give daily feedback',
+    description: 'Write a short feedback about your experience today',
+    xp: 25,
+    completed: false,
   }
+
+];
+
+// Funzione per ottenere 3 daily task randomiche ma fisse per il giorno
+function getTodaysDailyTasks(tasks: Task[]): Task[] {
+  // Usa la data come seed
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  let hash = 0;
+  for (let i = 0; i < today.length; i++) {
+    hash = today.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  // Shuffle deterministico
+  const shuffled = [...tasks];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    hash = (hash * 9301 + 49297) % 233280;
+    const j = Math.floor((hash / 233280) * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, 3);
+}
+
+const todaysDailyTasks = getTodaysDailyTasks(dailyTasks);
+
+// Learn Center topics
+const learnTopics = [
+  {
+    "id": "what-is-web3",
+    "title": "What is Web3?",
+    "shortDescription": "Understand the next evolution of the internet",
+    "longDescription": "Web3 is the next internet evolution, decentralized and powered by blockchain technology. Unlike Web2, which is dynamic but centralized, Web3 prioritizes user ownership of data and identity. Web3 is governed by principles such as decentralization, ownership of assets and identity, blockchain transparency, open-source development, and permissionless participation."
+  },
+  {
+    "id": "what-is-blockchain",
+    "title": "What is a Blockchain?",
+    "shortDescription": "Learn about blockchain technology fundamentals",
+    "longDescription": "A blockchain is a distributed, digital, and immutable ledger designed for secure and transparent recording of transactions in a decentralized manner. Key features include immutability (data can't be altered once added), transparency (transactions visible to everyone), decentralization (no single controlling authority), and security (protected by cryptography). Data is stored in chronologically linked blocks containing a list of transactions, timestamps, and cryptographic hashes linking each block to its predecessor."
+  },
+  {
+    "id": "what-is-cryptocurrency",
+    "title": "What is a Cryptocurrency?",
+    "shortDescription": "Discover digital currencies secured by cryptography",
+    "longDescription": "A cryptocurrency is a digital currency secured by cryptography and recorded on the blockchain. Cryptocurrencies have various applications, including payments, utilities (such as Ethereum for gas fees), or value storage (like Bitcoin)."
+  },
+  {
+    "id": "securing-cryptocurrencies",
+    "title": "How Do You Secure Your Cryptocurrencies?",
+    "shortDescription": "Learn methods for safely storing your digital assets",
+    "longDescription": "Cryptocurrencies are stored using Crypto Wallets, which manage both your blockchain identity and assets, analogous to a combined bank and ID. Wallets are categorized as Hot Wallets (online-connected like MetaMask) and Cold Wallets (offline like Trezor). Wallets store private (non-shareable password) and public keys (shareable email-like identifier), sign transactions, interact with decentralized applications (dApps), and display balances and NFTs."
+  },
+  {
+    "id": "what-are-transactions",
+    "title": "What Are Transactions?",
+    "shortDescription": "Understand blockchain transaction processes",
+    "longDescription": "In Web3, a transaction records actions performed on the blockchain, such as sending tokens or interacting with smart contracts. The process involves user creation of a transaction, wallet signing using a private key, broadcasting to the network, validation by validators, and eventual inclusion in the blockchain. Transactions incur a Gas Fee, which compensates validators and prevents spam."
+  },
+  {
+    "id": "who-are-validators",
+    "title": "Who Are Validators and Why Are They Important?",
+    "shortDescription": "Explore the role and significance of blockchain validators",
+    "longDescription": "Validators verify blockchain transactions and create new blocks, crucial for maintaining blockchain security and integrity. They stake native blockchain tokens (e.g., AVAX on Avalanche) to participate. Validators proposing or validating blocks are selected based on their stake size. Honest validators earn token rewards, whereas malicious validators risk losing their stakes."
+  },
+  {
+    "id": "what-is-smart-contract",
+    "title": "What is a Smart Contract?",
+    "shortDescription": "Learn about self-executing blockchain programs",
+    "longDescription": "Smart contracts are self-executing programs on the blockchain that store data and trigger actions, like token transfers. They operate transparently, immutably, and automatically, removing the need for intermediaries."
+  },
+  {
+    "id": "what-are-dapps",
+    "title": "What are dApps?",
+    "shortDescription": "Understand decentralized applications running on blockchains",
+    "longDescription": "Decentralized applications (dApps) run on blockchain networks using smart contracts for operations and crypto wallets for identity and authentication. Common dApps include decentralized financial platforms (e.g., Uniswap), NFT marketplaces (e.g., OpenSea), and blockchain-based games (e.g., Axie Infinity)."
+  }
+
 ];
 
 const Index = () => {
-  const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
-  const [currentXP, setCurrentXP] = useState(75);
-  const [currentLevel, setCurrentLevel] = useState(1);
+  const [currentSeasonIdx, setCurrentSeasonIdx] = useState(0);
+  const [seasonsState, setSeasonsState] = useState<Season[]>(JSON.parse(JSON.stringify(seasons)));
+  const [currentXP, setCurrentXP] = useState(0);
   const [isConnected, setIsConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedLearnTopic, setSelectedLearnTopic] = useState<typeof learnTopics[0] | null>(null);
 
-  const currentLevelData = levels.find(l => l.level === currentLevel);
-  const nextLevelData = levels.find(l => l.level === currentLevel + 1);
-  const progressToNextLevel = nextLevelData ? 
-    ((currentXP - (currentLevelData?.xpRequired || 0)) / (nextLevelData.xpRequired - (currentLevelData?.xpRequired || 0))) * 100 : 100;
-
-  const completedTasks = tasks.filter(task => task.completed).length;
-  const totalTasks = tasks.length;
+  const currentSeason = seasonsState[currentSeasonIdx];
+  const completedTasks = currentSeason.tasks.filter(task => task.completed).length;
+  const totalTasks = currentSeason.tasks.length;
+  const progressToNextSeason = (completedTasks / totalTasks) * 100;
+  const completedRewards = currentSeason.tasks.filter(t => t.completed && t.reward).map(t => t.reward);
 
   const handleWalletConnect = (address: string) => {
     setWalletAddress(address);
@@ -167,6 +498,44 @@ const Index = () => {
   const handleDisconnect = () => {
     setIsConnected(false);
     setWalletAddress('');
+  };
+
+  const handleCompleteTask = (taskId: string) => {
+    setSeasonsState(prev => {
+      const newSeasons = [...prev];
+      const season = newSeasons[currentSeasonIdx];
+      const taskIdx = season.tasks.findIndex(t => t.id === taskId);
+      if (taskIdx !== -1 && !season.tasks[taskIdx].completed) {
+        season.tasks[taskIdx].completed = true;
+        setCurrentXP(xp => xp + season.tasks[taskIdx].xp);
+      }
+      // Se tutte le task sono completate, passa alla prossima season
+      if (season.tasks.every(t => t.completed) && currentSeasonIdx < seasons.length - 1) {
+        setTimeout(() => setCurrentSeasonIdx(idx => idx + 1), 1000);
+      }
+      return newSeasons;
+    });
+  };
+
+  // Funzione per marcare una task come completata tramite learnTopicId
+  const completeTaskByLearnTopic = (learnTopicId: string) => {
+    setSeasonsState(prev => {
+      const newSeasons = [...prev];
+      const season = newSeasons[currentSeasonIdx];
+      let updated = false;
+      for (const task of season.tasks) {
+        if (task.learnTopicId === learnTopicId && !task.completed) {
+          task.completed = true;
+          setCurrentXP(xp => xp + task.xp);
+          updated = true;
+        }
+      }
+      // Se tutte le task sono completate, passa alla prossima season
+      if (updated && season.tasks.every(t => t.completed) && currentSeasonIdx < seasons.length - 1) {
+        setTimeout(() => setCurrentSeasonIdx(idx => idx + 1), 1000);
+      }
+      return newSeasons;
+    });
   };
 
   if (!isConnected) {
@@ -187,17 +556,13 @@ const Index = () => {
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-cyber-blue to-cyber-purple bg-clip-text text-transparent">
                   CryptoQuest
                 </h1>
-                <p className="text-sm text-muted-foreground">Your crypto adventure starts here</p>
+                <p className="text-sm text-muted-foreground">Your crypto adventure starts here.</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">Total XP</p>
                 <p className="text-lg font-bold text-cyber-blue">{currentXP}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-muted-foreground">Level</p>
-                <p className="text-lg font-bold text-cyber-purple">{currentLevel}</p>
               </div>
               <div className="flex items-center gap-2">
                 <div className="text-right">
@@ -217,13 +582,13 @@ const Index = () => {
         <Tabs defaultValue="battlepass" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="battlepass">Wallet Pass</TabsTrigger>
-            <TabsTrigger value="transactions">
-              <History className="w-4 h-4 mr-2" />
-              Transactions
-            </TabsTrigger>
             <TabsTrigger value="send">
               <Send className="w-4 h-4 mr-2" />
               Send
+            </TabsTrigger>
+            <TabsTrigger value="transactions">
+              <History className="w-4 h-4 mr-2" />
+              Transactions
             </TabsTrigger>
             <TabsTrigger value="learn">
               <BookOpen className="w-4 h-4 mr-2" />
@@ -233,71 +598,70 @@ const Index = () => {
 
           <TabsContent value="battlepass">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Battle Pass */}
+              {/* Season Pass */}
               <div className="lg:col-span-2">
                 <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
                   <CardHeader>
                     <CardTitle className="text-xl font-bold text-cyber-blue flex items-center gap-2">
                       <Trophy className="w-5 h-5" />
-                      Wallet Pass - Season 1
+                      {currentSeason.title}
                     </CardTitle>
                     <div className="flex items-center gap-4">
                       <div className="flex-1">
                         <div className="flex justify-between text-sm mb-2">
-                          <span>Level Progress</span>
-                          <span>{Math.round(progressToNextLevel)}%</span>
+                          <span>Season Progress</span>
+                          <span>{Math.round(progressToNextSeason)}%</span>
                         </div>
-                        <Progress value={progressToNextLevel} className="h-2" />
+                        <Progress value={progressToNextSeason} className="h-2" />
                       </div>
                       <Badge variant="outline" className="border-cyber-purple text-cyber-purple">
-                        {currentXP} / {nextLevelData?.xpRequired || 'MAX'} XP
+                        {completedTasks} / {totalTasks} Task
                       </Badge>
                     </div>
                   </CardHeader>
                   <CardContent>
+                    <div className="mb-4">
+                      <p className="text-sm text-muted-foreground">{currentSeason.description}</p>
+                    </div>
                     <div className="space-y-4">
-                      {levels.map((level, index) => (
-                        <Dialog key={level.level}>
+                      {currentSeason.tasks.map((task) => (
+                        <Dialog key={task.id} open={selectedTask?.id === task.id} onOpenChange={(open) => setSelectedTask(open ? task : null)}>
                           <DialogTrigger asChild>
-                            <div 
+                            <div
                               className={`relative p-4 rounded-lg border transition-all cursor-pointer hover:scale-105 ${
-                                level.unlocked 
-                                  ? 'bg-gradient-to-r from-cyber-blue/10 to-cyber-purple/10 border-cyber-blue/30' 
+                                task.completed
+                                  ? 'bg-gradient-to-r from-cyber-blue/10 to-cyber-purple/10 border-cyber-blue/30'
                                   : 'bg-gray-500/10 border-gray-500/20'
                               }`}
-                              onClick={() => setSelectedLevel(level)}
+                              onClick={() => setSelectedTask(task)}
                             >
                               <div className="flex items-center gap-4">
                                 <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                                  level.unlocked ? 'bg-gradient-to-br from-cyber-blue to-cyber-purple' : 'bg-gray-500'
+                                  task.completed ? 'bg-gradient-to-br from-cyber-blue to-cyber-purple' : 'bg-gray-500'
                                 }`}>
-                                  {level.unlocked ? (
-                                    <Star className="w-6 h-6 text-white" />
+                                  {task.completed ? (
+                                    <CheckCircle className="w-6 h-6 text-white" />
                                   ) : (
-                                    <Lock className="w-6 h-6 text-gray-300" />
+                                    <Target className="w-6 h-6 text-gray-300" />
                                   )}
                                 </div>
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
-                                    <h3 className="font-bold text-lg">{level.title}</h3>
+                                    <h3 className="font-bold text-lg">{task.title}</h3>
                                     <Badge variant="outline" className="text-xs">
-                                      Level {level.level}
+                                      +{task.xp} XP
                                     </Badge>
                                   </div>
                                   <p className="text-sm text-muted-foreground mb-2">
-                                    {level.xpRequired} XP required
+                                    {task.description}
                                   </p>
-                                  <div className="flex gap-2">
-                                    {level.rewards.map((reward, idx) => (
-                                      <Badge key={idx} variant="secondary" className="text-xs">
-                                        {reward}
-                                      </Badge>
-                                    ))}
-                                  </div>
+                                  {task.reward && (
+                                    <Badge variant="secondary" className="text-xs">
+                                      <Gift className="w-3 h-3 mr-1" />
+                                      {task.reward}
+                                    </Badge>
+                                  )}
                                 </div>
-                                {currentLevel >= level.level && (
-                                  <CheckCircle className="w-6 h-6 text-green-400" />
-                                )}
                               </div>
                             </div>
                           </DialogTrigger>
@@ -305,50 +669,24 @@ const Index = () => {
                             <DialogHeader>
                               <DialogTitle className="flex items-center gap-2">
                                 <Star className="w-5 h-5 text-cyber-blue" />
-                                {level.title}
+                                {task.title}
                               </DialogTitle>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
                                 <h4 className="font-semibold mb-2">Description</h4>
-                                <p className="text-sm text-muted-foreground">{level.description}</p>
+                                <p className="text-sm text-muted-foreground">{task.description}</p>
                               </div>
-                              
-                              <div>
-                                <h4 className="font-semibold mb-2">Requirements</h4>
-                                <ul className="text-sm text-muted-foreground space-y-1">
-                                  {level.requirements.map((req, idx) => (
-                                    <li key={idx} className="flex items-center gap-2">
-                                      <Target className="w-3 h-3" />
-                                      {req}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-
-                              <div>
-                                <h4 className="font-semibold mb-2">Tips</h4>
-                                <ul className="text-sm text-muted-foreground space-y-1">
-                                  {level.tips.map((tip, idx) => (
-                                    <li key={idx} className="flex items-center gap-2">
-                                      <BookOpen className="w-3 h-3" />
-                                      {tip}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-
-                              <div>
-                                <h4 className="font-semibold mb-2">Rewards</h4>
-                                <div className="flex flex-wrap gap-2">
-                                  {level.rewards.map((reward, idx) => (
-                                    <Badge key={idx} variant="secondary" className="text-xs">
-                                      <Gift className="w-3 h-3 mr-1" />
-                                      {reward}
-                                    </Badge>
-                                  ))}
+                              {task.reward && (
+                                <div>
+                                  <h4 className="font-semibold mb-2">Reward</h4>
+                                  <Badge variant="secondary" className="text-xs">
+                                    <Gift className="w-3 h-3 mr-1" />
+                                    {task.reward}
+                                  </Badge>
                                 </div>
-                              </div>
+                              )}
+                              {/* Qui puoi aggiungere altri dettagli come requirements, tips, ecc. */}
                             </div>
                           </DialogContent>
                         </Dialog>
@@ -360,24 +698,24 @@ const Index = () => {
 
               {/* Sidebar */}
               <div className="space-y-6">
-                {/* Current Level */}
+                {/* Current Season */}
                 <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
                   <CardHeader>
                     <CardTitle className="text-lg font-bold text-cyber-purple flex items-center gap-2">
                       <Award className="w-5 h-5" />
-                      Current Level
+                      Season Corrente
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-center">
                       <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-cyber-blue to-cyber-purple rounded-full flex items-center justify-center">
-                        <span className="text-2xl font-bold text-white">{currentLevel}</span>
+                        <span className="text-2xl font-bold text-white">{currentSeason.season}</span>
                       </div>
-                      <h3 className="font-bold text-lg mb-2">{currentLevelData?.title}</h3>
+                      <h3 className="font-bold text-lg mb-2">{currentSeason.title}</h3>
                       <p className="text-sm text-muted-foreground mb-4">
-                        {currentXP} / {nextLevelData?.xpRequired || 'MAX'} XP
+                        {completedTasks} / {totalTasks} Task
                       </p>
-                      <Progress value={progressToNextLevel} className="h-2" />
+                      <Progress value={progressToNextSeason} className="h-2" />
                     </div>
                   </CardContent>
                 </Card>
@@ -393,7 +731,7 @@ const Index = () => {
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Tasks Completed</span>
+                        <span className="text-sm text-muted-foreground">Task Done</span>
                         <span className="font-bold text-cyber-blue">{completedTasks}/{totalTasks}</span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -401,9 +739,33 @@ const Index = () => {
                         <span className="font-bold text-cyber-purple">{currentXP}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Level</span>
-                        <span className="font-bold text-cyber-neon">{currentLevel}</span>
+                        <span className="text-sm text-muted-foreground">Season</span>
+                        <span className="font-bold text-cyber-neon">{currentSeason.season}</span>
                       </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Reward Season */}
+                <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/20">
+                  <CardHeader>
+                    <CardTitle className="text-lg font-bold text-cyber-blue flex items-center gap-2">
+                      <Gift className="w-5 h-5" />
+                      Reward Season
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {completedRewards.length === 0 ? (
+                        <span className="text-sm text-muted-foreground">No rewards yet</span>
+                      ) : (
+                        completedRewards.map((reward, idx) => (
+                          <Badge key={idx} variant="secondary" className="text-xs">
+                            <Gift className="w-3 h-3 mr-1" />
+                            {reward}
+                          </Badge>
+                        ))
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -418,7 +780,7 @@ const Index = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      {tasks.slice(0, 3).map((task) => (
+                      {todaysDailyTasks.map((task) => (
                         <div key={task.id} className="flex items-center gap-3 p-3 rounded-lg bg-cyber-dark/30">
                           <div className={`w-2 h-2 rounded-full ${
                             task.completed ? 'bg-green-400' : 'bg-yellow-400'
@@ -452,26 +814,36 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-blue">Blockchain Basics</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Learn the fundamentals of blockchain technology</p>
-                    <Button variant="outline" size="sm">Start Learning</Button>
-                  </div>
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-purple">DeFi Guide</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Explore decentralized finance protocols</p>
-                    <Button variant="outline" size="sm">Start Learning</Button>
-                  </div>
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-neon">Security Best Practices</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Keep your crypto assets safe</p>
-                    <Button variant="outline" size="sm">Start Learning</Button>
-                  </div>
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-blue">Trading Strategies</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Learn how to trade cryptocurrencies</p>
-                    <Button variant="outline" size="sm">Start Learning</Button>
-                  </div>
+                  {learnTopics.map((topic) => (
+                    <Dialog key={topic.id} open={selectedLearnTopic?.id === topic.id} onOpenChange={open => {
+                      setSelectedLearnTopic(open ? topic : null);
+                      if (open) completeTaskByLearnTopic(topic.id);
+                    }}>
+                      <DialogTrigger asChild>
+                        <div
+                          className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20 cursor-pointer hover:scale-105 transition-all"
+                          onClick={() => setSelectedLearnTopic(topic)}
+                        >
+                          <h3 className="font-bold mb-2 text-cyber-blue">{topic.title}</h3>
+                          <p className="text-sm text-muted-foreground mb-3">{topic.shortDescription}</p>
+                          <Button variant="outline" size="sm">Learn More</Button>
+                        </div>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-2">
+                            {topic.title}
+                          </DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="font-semibold mb-2">Description</h4>
+                            <p className="text-sm text-muted-foreground">{topic.longDescription}</p>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  ))}
                 </div>
               </CardContent>
             </Card>
