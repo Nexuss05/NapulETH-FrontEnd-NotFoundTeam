@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wallet, Shield, AlertCircle } from 'lucide-react';
+import Icon from '@/assets/icons/icon.png';
 
 interface WalletConnectProps {
   onConnect: (walletAddress: string) => void;
@@ -27,8 +28,12 @@ export const WalletConnect = ({ onConnect }: WalletConnectProps) => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-cyber-dark flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-card/80 backdrop-blur-sm border-cyber-blue/20">
         <CardHeader className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-cyber-blue to-cyber-purple rounded-full flex items-center justify-center">
+          {/* <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-cyber-blue to-cyber-purple rounded-full flex items-center justify-center">
             <Wallet className="w-8 h-8 text-white" />
+          </div> */}
+
+          <div className="w-20 h-20 mx-auto flex items-center justify-center">
+            <img src={Icon} alt="Icon" className="w-13 h-13" />
           </div>
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-cyber-blue to-cyber-purple bg-clip-text text-transparent">
             CryptoQuest
@@ -38,15 +43,15 @@ export const WalletConnect = ({ onConnect }: WalletConnectProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-cyber-blue/10 border border-cyber-blue/20">
-            <Shield className="w-5 h-5 text-cyber-blue" />
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-cyber-blue/10 border border-cyber-green/20">
+            <Shield className="w-5 h-5 text-cyber-green" />
             <div className="text-sm">
               <p className="font-medium">Secure Connection</p>
               <p className="text-muted-foreground">Your wallet stays safe</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-cyber-blue/10 border border-amber-500/20">
             <AlertCircle className="w-5 h-5 text-amber-500" />
             <div className="text-sm">
               <p className="font-medium">Learn & Earn</p>
@@ -57,17 +62,9 @@ export const WalletConnect = ({ onConnect }: WalletConnectProps) => {
           <Button 
             onClick={connectWallet}
             disabled={isConnecting}
-            className="w-full bg-gradient-to-r from-cyber-blue to-cyber-purple hover:from-cyber-blue/90 hover:to-cyber-purple/90"
+            className="w-full text-white bg-gradient-to-r from-cyber-blue to-cyber-purple hover:from-cyber-blue/90 hover:to-cyber-purple/90"
           >
-            {isConnecting ? 'Connecting...' : 'Connect MetaMask'}
-          </Button>
-
-          <Button 
-            onClick={connectDev}
-            variant="outline"
-            className="w-full border-cyber-neon/30 hover:bg-cyber-neon/10"
-          >
-            Dev Login (Test Mode)
+            {isConnecting ? 'Connecting...' : 'Connect Avalanche'}
           </Button>
         </CardContent>
       </Card>
