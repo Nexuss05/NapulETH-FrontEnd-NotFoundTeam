@@ -452,26 +452,22 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-blue">Blockchain Basics</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Learn the fundamentals of blockchain technology</p>
-                    <Button variant="outline" size="sm">Start Learning</Button>
-                  </div>
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-purple">DeFi Guide</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Explore decentralized finance protocols</p>
-                    <Button variant="outline" size="sm">Start Learning</Button>
-                  </div>
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-neon">Security Best Practices</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Keep your crypto assets safe</p>
-                    <Button variant="outline" size="sm">Start Learning</Button>
-                  </div>
-                  <div className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
-                    <h3 className="font-bold mb-2 text-cyber-blue">Trading Strategies</h3>
-                    <p className="text-sm text-muted-foreground mb-3">Learn how to trade cryptocurrencies</p>
-                    <Button variant="outline" size="sm">Start Learning</Button>
-                  </div>
+                  {[
+                    { title: 'What is Web3?', desc: 'Discover the decentralized web where users own their data and identity.', color: 'text-cyber-blue' },
+                    { title: 'What is a Blockchain?', desc: 'Learn how blockchains store immutable, transparent, and secure data.', color: 'text-cyber-purple' },
+                    { title: 'What is a Cryptocurrency?', desc: 'Understand digital assets like Bitcoin and Ethereum and their use cases.', color: 'text-cyber-neon' },
+                    { title: 'How Do You Secure Your Cryptocurrencies?', desc: 'Explore wallets, private keys, and best practices for protecting assets.', color: 'text-cyber-orange' },
+                    { title: 'What are Transactions?', desc: 'Learn how blockchain records and verifies digital actions and payments.', color: 'text-cyber-green' },
+                    { title: 'Who are Validators and Why Are They Important?', desc: 'Understand the role of validators in securing and maintaining the blockchain.', color: 'text-cyber-red' },
+                    { title: 'What is a Smart Contract?', desc: 'Discover self-executing blockchain programs and how they automate logic.', color: 'text-cyber-teal' },
+                    { title: 'What are dApps?', desc: 'Explore decentralized applications like DeFi, NFT marketplaces, and games.', color: 'text-cyber-pink' }
+                  ].map((item, index) => (
+                    <div key={index} className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20">
+                      <h3 className={`font-bold mb-2 ${item.color}`}>{item.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-3">{item.desc}</p>
+                      <Button variant="outline" size="sm">Start Learning</Button>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
