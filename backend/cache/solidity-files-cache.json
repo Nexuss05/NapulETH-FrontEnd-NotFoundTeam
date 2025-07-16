@@ -1,0 +1,93 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/home/ma2214889042/new/scaffold-eth-2/packages/hardhat/contracts/YourContract.sol": {
+      "lastModificationDate": 1752596546329,
+      "contentHash": "fd06d4791aa5d282a28da26b6efe2c57",
+      "sourceName": "contracts/YourContract.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0 <0.9.0"
+      ],
+      "artifacts": [
+        "YourContract"
+      ]
+    },
+    "/home/ma2214889042/new/scaffold-eth-2/packages/hardhat/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1752596971183,
+      "contentHash": "896f68942c3a20e9ae3c3c5bfd3add54",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    }
+  }
+}
