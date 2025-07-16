@@ -216,7 +216,7 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="battlepass" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="battlepass">Battle Pass</TabsTrigger>
+            <TabsTrigger value="battlepass">Wallet Pass</TabsTrigger>
             <TabsTrigger value="transactions">
               <History className="w-4 h-4 mr-2" />
               Transactions
@@ -239,7 +239,7 @@ const Index = () => {
                   <CardHeader>
                     <CardTitle className="text-xl font-bold text-cyber-blue flex items-center gap-2">
                       <Trophy className="w-5 h-5" />
-                      Battle Pass - Season 1
+                      Wallet Pass - Season 1
                     </CardTitle>
                     <div className="flex items-center gap-4">
                       <div className="flex-1">
