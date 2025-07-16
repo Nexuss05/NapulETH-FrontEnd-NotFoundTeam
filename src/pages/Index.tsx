@@ -35,6 +35,7 @@ interface Task {
   xp: number;
   completed: boolean;
   reward?: string;
+  learnTopicId?: string; // Aggiunto per collegare la task al topic del Learn Center
 }
 
 interface Season {
@@ -74,7 +75,8 @@ const seasons: Season[] = [
         description: 'Learn the basics of Web3 technology.',
         xp: 150,
         completed: false,
-        reward: 'Web3 Badge'
+        reward: 'Web3 Badge',
+        learnTopicId: 'what-is-web3',
       },
       {
         id: '4',
@@ -82,7 +84,8 @@ const seasons: Season[] = [
         description: 'Understand the fundamentals of cryptocurrencies.',
         xp: 150,
         completed: false,
-        reward: 'Cryptocurrency Badge'
+        reward: 'Cryptocurrency Badge',
+        learnTopicId: 'what-is-cryptocurrency',
       },
       {
         id: '5',
@@ -114,7 +117,8 @@ const seasons: Season[] = [
         description: 'Learn about blockchain technology and its applications.', 
         xp: 200, 
         completed: false, 
-        reward: 'Blockchain Badge' 
+        reward: 'Blockchain Badge',
+        learnTopicId: 'what-is-blockchain',
       },
       { 
         id: '8', 
@@ -122,7 +126,8 @@ const seasons: Season[] = [
         description: 'Understand best practices for cryptocurrency security.', 
         xp: 200, 
         completed: false, 
-        reward: 'Secure Cryptocurrencies Badge' 
+        reward: 'Secure Cryptocurrencies Badge',
+        learnTopicId: 'securing-cryptocurrencies',
       },
       { 
         id: '9', 
@@ -146,7 +151,8 @@ const seasons: Season[] = [
         description: 'Dive deeper into how crypto transactions function.', 
         xp: 200, 
         completed: false, 
-        reward: 'Transactions Badge' 
+        reward: 'Transactions Badge',
+        learnTopicId: 'what-are-transactions',
       },
       { 
         id: '12', 
@@ -154,7 +160,8 @@ const seasons: Season[] = [
         description: 'Understand the role and significance of validators.', 
         xp: 250, 
         completed: false, 
-        reward: 'Validators Badge' 
+        reward: 'Validators Badge',
+        learnTopicId: 'who-are-validators',
       }
     ]
   },
@@ -178,7 +185,8 @@ const seasons: Season[] = [
         description: 'Learn the fundamentals of smart contracts.', 
         xp: 300, 
         completed: false, 
-        reward: 'Smart Contract Badge' 
+        reward: 'Smart Contract Badge',
+        learnTopicId: 'what-is-smart-contract',
       },
       { 
         id: '15', 
@@ -194,7 +202,8 @@ const seasons: Season[] = [
         description: 'Discover decentralized applications in depth.', 
         xp: 300, 
         completed: false, 
-        reward: 'dApps Badge' 
+        reward: 'dApps Badge',
+        learnTopicId: 'what-are-dapps',
       },
       { 
         id: '17', 
@@ -479,6 +488,7 @@ const Index = () => {
   const completedTasks = currentSeason.tasks.filter(task => task.completed).length;
   const totalTasks = currentSeason.tasks.length;
   const progressToNextSeason = (completedTasks / totalTasks) * 100;
+  const completedRewards = currentSeason.tasks.filter(t => t.completed && t.reward).map(t => t.reward);
 
   const handleWalletConnect = (address: string) => {
     setWalletAddress(address);
@@ -501,6 +511,27 @@ const Index = () => {
       }
       // Se tutte le task sono completate, passa alla prossima season
       if (season.tasks.every(t => t.completed) && currentSeasonIdx < seasons.length - 1) {
+        setTimeout(() => setCurrentSeasonIdx(idx => idx + 1), 1000);
+      }
+      return newSeasons;
+    });
+  };
+
+  // Funzione per marcare una task come completata tramite learnTopicId
+  const completeTaskByLearnTopic = (learnTopicId: string) => {
+    setSeasonsState(prev => {
+      const newSeasons = [...prev];
+      const season = newSeasons[currentSeasonIdx];
+      let updated = false;
+      for (const task of season.tasks) {
+        if (task.learnTopicId === learnTopicId && !task.completed) {
+          task.completed = true;
+          setCurrentXP(xp => xp + task.xp);
+          updated = true;
+        }
+      }
+      // Se tutte le task sono completate, passa alla prossima season
+      if (updated && season.tasks.every(t => t.completed) && currentSeasonIdx < seasons.length - 1) {
         setTimeout(() => setCurrentSeasonIdx(idx => idx + 1), 1000);
       }
       return newSeasons;
@@ -725,12 +756,16 @@ const Index = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
-                      {currentSeason.rewards.map((reward, idx) => (
-                        <Badge key={idx} variant="secondary" className="text-xs">
-                          <Gift className="w-3 h-3 mr-1" />
-                          {reward}
-                        </Badge>
-                      ))}
+                      {completedRewards.length === 0 ? (
+                        <span className="text-sm text-muted-foreground">No rewards yet</span>
+                      ) : (
+                        completedRewards.map((reward, idx) => (
+                          <Badge key={idx} variant="secondary" className="text-xs">
+                            <Gift className="w-3 h-3 mr-1" />
+                            {reward}
+                          </Badge>
+                        ))
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -780,7 +815,10 @@ const Index = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {learnTopics.map((topic) => (
-                    <Dialog key={topic.id} open={selectedLearnTopic?.id === topic.id} onOpenChange={open => setSelectedLearnTopic(open ? topic : null)}>
+                    <Dialog key={topic.id} open={selectedLearnTopic?.id === topic.id} onOpenChange={open => {
+                      setSelectedLearnTopic(open ? topic : null);
+                      if (open) completeTaskByLearnTopic(topic.id);
+                    }}>
                       <DialogTrigger asChild>
                         <div
                           className="p-4 rounded-lg bg-cyber-dark/30 border border-cyber-blue/20 cursor-pointer hover:scale-105 transition-all"
