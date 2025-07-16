@@ -497,13 +497,13 @@ const Index = () => {
         <Tabs defaultValue="battlepass" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="battlepass">Wallet Pass</TabsTrigger>
-            <TabsTrigger value="transactions">
-              <History className="w-4 h-4 mr-2" />
-              Transactions
-            </TabsTrigger>
             <TabsTrigger value="send">
               <Send className="w-4 h-4 mr-2" />
               Send
+            </TabsTrigger>
+            <TabsTrigger value="transactions">
+              <History className="w-4 h-4 mr-2" />
+              Transactions
             </TabsTrigger>
             <TabsTrigger value="learn">
               <BookOpen className="w-4 h-4 mr-2" />
