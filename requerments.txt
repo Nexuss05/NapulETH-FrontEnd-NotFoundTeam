@@ -1,0 +1,15 @@
+# Flask web framework
+flask==3.0.0
+
+# Flask CORS support
+flask-cors==4.0.0
+
+# Process management
+psutil==5.9.6
+
+# Dependencies for ai.py script
+google-genai==0.8.0
+opencv-python==4.8.1.78
+pyaudio==0.2.14
+pillow==10.1.0
+mss==9.0.1
