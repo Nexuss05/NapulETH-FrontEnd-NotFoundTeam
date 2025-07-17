@@ -1,0 +1,64 @@
+import { ContractStatus } from "@/components/ContractStatus";
+import { WalletConnect } from "@/components/WalletConnect";
+import { TransactionForm } from "@/components/TransactionForm";
+import { TransactionHistory } from "@/components/TransactionHistory";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Shield, TrendingUp, Zap } from "lucide-react";
+
+const Index = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-blue-900">
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            CryptoQuest
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+            Connect your wallet to start your crypto journey
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Secure Connection</CardTitle>
+              <Shield className="h-4 w-4 ml-auto text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <CardDescription>Your wallet stays safe</CardDescription>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Learn & Earn</CardTitle>
+              <TrendingUp className="h-4 w-4 ml-auto text-blue-600" />
+            </CardHeader>
+            <CardContent>
+              <CardDescription>Complete tasks to level up</CardDescription>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Fast Transactions</CardTitle>
+              <Zap className="h-4 w-4 ml-auto text-yellow-600" />
+            </CardHeader>
+            <CardContent>
+              <CardDescription>Powered by Avalanche</CardDescription>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="flex flex-col items-center space-y-6">
+          <WalletConnect />
+          <ContractStatus />
+          <TransactionForm />
+          <TransactionHistory />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Index;
