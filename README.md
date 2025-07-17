@@ -142,7 +142,7 @@ NapulETH-FrontEnd-NotFoundTeam/
    source ai-env/bin/activate  # On Windows: ai-env\Scripts\activate
    ```
    
-2.**Install AI dependencies and Start**
+2. **Install AI dependencies and Start**
    ```bash
    pip install -r requirements.txt
    python app.py
