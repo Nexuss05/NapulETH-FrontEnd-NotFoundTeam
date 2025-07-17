@@ -16,6 +16,19 @@ export const TransactionForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  // Min value and conversion
+  const MIN_FEE = 0.001; // ETH
+  const ETH_PRICE = 2500; // 1 ETH = $2500
+  const estimatedUSD = (MIN_FEE * ETH_PRICE).toFixed(2);
+
+  // check only if token is ETH
+  const isAmountTooLow = formData.token === 'ETH' && parseFloat(formData.amount || '0') <= parseFloat(estimatedUSD) && formData.amount !== '';
+  const isAddressInvalid = formData.to.trim().length < 10; // esempio di validazione semplice
+  const isAmountInvalid = !formData.amount || parseFloat(formData.amount) <= 0;
+
+  const isFormInvalid = isAmountTooLow || isAddressInvalid || isAmountInvalid;
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -45,14 +58,18 @@ export const TransactionForm = () => {
               placeholder="0x..."
               value={formData.to}
               onChange={(e) => setFormData(prev => ({ ...prev, to: e.target.value }))}
-              className="bg-cyber-dark/30 border-cyber-blue/30"
+              className="bg-[#1F242E] text-white border-cyber-blue/30"
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="amount">Amount</Label>
+              <Label 
+              htmlFor="amount"
+              className={isAmountTooLow ? 'text-red-500' : ''}>
+                Amount
+              </Label>
               <Input
                 id="amount"
                 type="number"
@@ -60,7 +77,10 @@ export const TransactionForm = () => {
                 placeholder="0.00"
                 value={formData.amount}
                 onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
-                className="bg-cyber-dark/30 border-cyber-blue/30"
+    className={`bg-[#1F242E] placeholder:text-white/50 text-white border ${
+      isAmountTooLow ? 'border-red-500 text-red-500' : 'border-cyber-blue/30'
+    }`}
+                //className="bg-[#1F242E] text-white border-cyber-blue/30"
                 required
               />
             </div>
@@ -87,18 +107,23 @@ export const TransactionForm = () => {
               <span className="text-sm font-medium text-amber-500">Network Fee</span>
             </div>
             <p className="text-sm text-muted-foreground mt-1">
-              Estimated gas fee: ~$2.50 (0.001 ETH)
+              Estimated gas fee: ~${estimatedUSD} ({MIN_FEE.toFixed(3)} ETH)
             </p>
           </div>
 
-          <Button 
-            type="submit" 
-            disabled={isLoading}
-            className="w-full bg-gradient-to-r from-cyber-blue to-cyber-purple hover:from-cyber-blue/90 hover:to-cyber-purple/90"
+          <Button
+            type="submit"
+            disabled={isLoading || isFormInvalid}
+            className={`w-full transition-colors ${
+              isFormInvalid
+                ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
+                : 'bg-gradient-to-r from-cyber-blue to-cyber-purple hover:from-cyber-blue/90 hover:to-cyber-purple/90 text-white'
+            }`}
           >
             {isLoading ? 'Sending...' : 'Send Transaction'}
             <Send className="w-4 h-4 ml-2" />
           </Button>
+
         </form>
       </CardContent>
     </Card>
