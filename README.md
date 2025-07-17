@@ -209,4 +209,4 @@ Created by team **NotFound**:
 - **Radix UI** for accessible components
 
 
-**Built with ❤️ for the NapulETH Community**
+**Built with ❤️ for the NapulETH Hackathon**
