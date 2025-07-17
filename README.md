@@ -24,11 +24,23 @@
 - **Security Training**: Best practices for cryptocurrency security
 - **Smart Contract Interaction**: Learn to interact with deployed contracts
 
+### - AI-Powered Assistant
+- **Real-time Guidance**: Interactive AI agent that assists with transactions and tutorials
+- **Risk Prevention**: Proactive risk assessment and warnings for transactions
+- **Knowledge Base Integration**: Access to comprehensive crypto education database
+- **Screen Sharing Capability**: AI can see and respond to your screen content in real-time
+- **Conversational Learning**: Chat with the AI like having a personal crypto tutor
+- **External Data Integration**: Connects to real-time databases for up-to-date information
+- **Search Functionality**: Advanced search capabilities for instant answers
+- **Interruptible Conversations**: Pause and resume AI interactions at any time
+- 
 ### - Modern UI/UX
 - **Cyberpunk Theme**: Futuristic design with neon colors and gradients
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Real-time Updates**: Live transaction status and wallet balance
 - **Toast Notifications**: User-friendly feedback for all actions
+
+
 
 ## Architecture:
 
@@ -39,6 +51,12 @@
 - **Radix UI** components for accessibility
 - **React Router** for navigation
 - **React Query** for state management
+
+### AI Agent Stack
+- **Real-time Screen Analysis** for contextual assistance
+- **Knowledge Base Integration** for educational content
+- **External API Connections** for live data feeds
+- **Voice/Text Interface** for natural conversations
 
 ### Web3 Integration
 - **Wagmi** for Ethereum interactions
@@ -81,6 +99,10 @@ NapulETH-FrontEnd-NotFoundTeam/
 │   └── deploy/                        # Deployment scripts
 ├── public/                            # Static assets
 └── package.json                       # Dependencies and scripts
+├── ai/
+│   ├── ai.py                          # AI agent core logic
+│   ├── app.py                         # AI application runner
+│   └── requirements.txt               # AI dependencies
 ```
 
 ## 🚀 Getting Started:
@@ -112,6 +134,18 @@ NapulETH-FrontEnd-NotFoundTeam/
 4. **Open your browser**
    Navigate to `http://localhost:8080`
 
+### AI Agent Setup
+
+1. **Create virtual environment for AI**
+   ```bash
+   python -m venv ai-env
+   source ai-env/bin/activate  # On Windows: ai-env\Scripts\activate
+
+2.**Install AI dependencies and Start **
+   pip install -r requirements.txt
+   
+   python app.py
+
 ## How to Use:
 
 ### 1. Wallet Connection
@@ -135,6 +169,15 @@ NapulETH-FrontEnd-NotFoundTeam/
 - View transaction history with blockchain explorer links
 - Monitor transaction status in real-time
 - Learn about gas fees and network costs
+
+### 5. AI Assistant
+- **Enable AI Agent**: Run `python app.py` to start the AI assistant
+- **Screen Sharing**: Allow screen access for contextual help
+- **Real-time Guidance**: Ask questions about any part of the interface
+- **Transaction Assistance**: Get help with transaction setup and risk assessment
+- **Educational Support**: Interactive explanations of crypto concepts
+- **Interrupt Anytime**: Pause or stop AI conversations as needed
+- **Toggle On/Off**: Enable or disable AI assistance at any time
 
 ## Configuration:
 
@@ -181,7 +224,9 @@ The application is configured for **Avalanche Fuji testnet**:
 - **Error Handling**: Comprehensive error messages and recovery
 - **Testnet Environment**: Safe learning environment with no real funds
 - **Private Key Protection**: Never exposed in the application
-
+- **AI Privacy Protection**: Screen reading only with explicit user permission
+- **Secure AI Communication**: Encrypted data transmission to AI services
+- **User-Controlled AI**: Complete control over AI activation and deactivation
 ## Performance:
 
 - **Vite Build System**: Fast development and optimized production builds
