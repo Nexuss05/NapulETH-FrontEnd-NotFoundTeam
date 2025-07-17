@@ -1,4 +1,4 @@
-# NapulETH Frontend - CryptoQuest DApp
+# NapulETH Hackathon - CryptoQuest DApp - NotFoundTeam
 
 ## Project Overview:
 
