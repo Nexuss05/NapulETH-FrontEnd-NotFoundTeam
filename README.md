@@ -140,11 +140,13 @@ NapulETH-FrontEnd-NotFoundTeam/
    ```bash
    python -m venv ai-env
    source ai-env/bin/activate  # On Windows: ai-env\Scripts\activate
-
-2.**Install AI dependencies and Start **
-   pip install -r requirements.txt
+   ```
    
+2.**Install AI dependencies and Start**
+   ```bash
+   pip install -r requirements.txt
    python app.py
+   ```
 
 ## How to Use:
 
